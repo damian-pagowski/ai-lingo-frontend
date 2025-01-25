@@ -6,8 +6,8 @@ export const getUserProfile = async () => {
   });
 };
 
-export const updateUserProfile = async (data) => {
-  return await apiClient('profile', {
+export const updateOwnProfile = async (data) => {
+  return await apiClient('users/profile', {
     method: 'PUT',
     body: JSON.stringify(data),
   });

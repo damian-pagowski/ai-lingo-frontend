@@ -20,7 +20,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="absolute top-16 left-0 w-full bg-gray-800 flex flex-col items-center">
+        <div className="absolute top-16 left-0 w-full bg-gray-800 flex flex-col items-center z-50">
           <Link to="/dashboard" className="hover:text-gray-300 py-4 text-xl">Home</Link>
           <Link to="/lessons" className="hover:text-gray-300 py-4 text-xl">Lessons</Link>
           <Link to="/profile" className="hover:text-gray-300 py-4 text-xl">Profile</Link>

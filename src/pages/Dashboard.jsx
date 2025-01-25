@@ -36,7 +36,7 @@ const Dashboard = () => {
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300 mb-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Suggested Next Step</h2>
         <p className="text-gray-700">Continue with your next lesson to maintain your streak.</p>
-        <Button onClick={() => navigate('/lessons/next')} className="mt-4 bg-blue-500 hover:bg-blue-600">
+        <Button onClick={() => navigate('/lessons/1')} className="mt-4 bg-blue-500 hover:bg-blue-600">
           Continue Lesson
         </Button>
       </div>
