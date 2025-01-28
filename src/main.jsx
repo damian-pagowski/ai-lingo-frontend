@@ -12,6 +12,7 @@ import LessonDetail from './pages/LessonDetail';
 import Profile from './pages/Profile';
 import Navbar from './components/layout/Navbar';
 import Settings from './pages/Settings';
+import UserSetup from './pages/UserSetup';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -28,6 +29,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/lessons/:id/exercise" element={<LessonExercise />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/setup" element={<UserSetup />} />
 
 
       </Routes>
