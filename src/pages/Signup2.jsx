@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { registerUser } from "../api/authApi";
 import Alert from "@mui/material/Alert";
 
-export default function SignUp() {
+export default function SignUp2() {
 
   const [formData, setFormData] = useState({
     name: "",
@@ -114,7 +114,7 @@ export default function SignUp() {
               Already have an account?
               <span>
                 <Link
-                  href="/login"
+                  href="/login2"
                   variant="body2"
                   sx={{ alignSelf: "center" }}
                 >

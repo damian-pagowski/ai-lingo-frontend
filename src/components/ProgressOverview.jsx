@@ -1,23 +1,25 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+// import * as React from "react";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import BorderLinearProgress from "@mui/material/LinearProgress";
 
 const ProgressOverview = ({ completedLessons, totalLessons, streak }) => {
-  const progressPercentage = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
+  const progressPercentage =
+    totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300 mb-6">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">Your Progress</h2>
-      <p className="text-gray-700">
-        Lessons Completed: {completedLessons}/{totalLessons}
-      </p>
-      <div className="relative w-full bg-gray-300 rounded-full h-3 mt-2">
-        <div
-          className="bg-blue-500 h-3 rounded-full"
-          style={{ width: `${progressPercentage}%` }}
-        ></div>
-      </div>
-      <p className="mt-4 text-gray-700">🔥 Streak: {streak} days</p>
-    </div>
+    <Card sx={{ minWidth: 275 }}>
+      <CardContent>
+        <Typography variant="h6">Your Progress</Typography>
+        <Typography variant="body2">
+          Lessons Completed: {completedLessons}/{totalLessons}
+        </Typography>
+        <BorderLinearProgress variant="determinate" value={progressPercentage} />
+        <Typography variant="body2">🔥 Streak: {streak} days</Typography>
+      </CardContent>
+    </Card>
   );
 };
 ProgressOverview.propTypes = {

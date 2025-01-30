@@ -1,10 +1,23 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../api/authApi';
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import FormLabel from "@mui/material/FormLabel";
+import FormControl from "@mui/material/FormControl";
+import Link from "@mui/material/Link";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Card from "../components/Card";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Alert from "@mui/material/Alert";
+import { loginUser } from "../api/authApi";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -12,58 +25,98 @@ const Login = () => {
     e.preventDefault();
     try {
       const data = await loginUser(email, password);
-      localStorage.setItem('token', data.token);
-      navigate('/dashboard');
+      localStorage.setItem("token", data.token);
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Login</h2>
-        
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700 font-medium">Email</label>
-            <input
-              type="email"
-              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-medium">Password</label>
-            <input
-              type="password"
-              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200"
+    <ThemeProvider theme={createTheme({ palette: {mode: 'dark'} })}>
+      <CssBaseline />
+      <Stack
+        sx={{
+          justifyContent: "center",
+          height: { xs: "100%", sm: "100dvh" },
+          p: 2,
+        }}
+      >
+        <Card variant="outlined">
+          <Typography
+            component="h1"
+            variant="h4"
+            sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
           >
-            Login
-          </button>
-        </form>
-        <p className="mt-4 text-center text-gray-600">
-          Don&apos;t have an account?{' '}
-          <a href="/signup" className="text-blue-500 hover:underline">
-            Signup
-          </a>
-        </p>
-      </div>
-    </div>
+            Sign in
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+          >
+            <FormControl>
+              <FormLabel htmlFor="email">Email</FormLabel>
+              <TextField
+                id="email"
+                type="email"
+                name="email"
+                placeholder="your@email.com"
+                autoComplete="email"
+                autoFocus
+                required
+                fullWidth
+                onChange={(e) => setEmail(e.target.value)}
+                variant="outlined"
+                sx={{ ariaLabel: "email" }}
+              />
+            </FormControl>
+            <FormControl>
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <FormLabel htmlFor="password">Password</FormLabel>
+              </Box>
+              <TextField
+                name="password"
+                placeholder="••••••"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                autoFocus
+                required
+                fullWidth
+                onChange={(e) => setPassword(e.target.value)}
+                variant="outlined"
+              />
+            </FormControl>
+            <Button type="submit" fullWidth variant="contained">
+              Sign in
+            </Button>
+            <Typography sx={{ textAlign: "center" }}>
+              Don&apos;t have an account?{" "}
+              <span>
+                <Link
+                  href="/signup"
+                  variant="body2"
+                  sx={{ alignSelf: "center" }}
+                >
+                  Sign up
+                </Link>
+              </span>
+            </Typography>
+          </Box>
+        </Card>
+        {error && (
+          <Alert
+            severity="warning"
+            onClose={() => {
+              setError(null);
+            }}
+          >
+            {error}
+          </Alert>
+        )}
+      </Stack>
+    </ThemeProvider>
   );
 };
 
