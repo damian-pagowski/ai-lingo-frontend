@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { getLessons } from "../api/lessonApi";
 import LessonCard from "../components/LessonCard";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 
 const LessonList = () => {
   const [lessons, setLessons] = useState([]);
@@ -30,19 +32,25 @@ const LessonList = () => {
     return <div className="text-center mt-20 text-red-500">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      
+    <Stack
+      sx={{
+        justifyContent: "center",
+        height: { xs: "100%", sm: "100dvh" },
+        p: 2,
+      }}
+    >
+      <Typography variant="h5" gutterBottom
+      sx={{
+        mx: "auto",
+        mb:2
+      }}>
+        Learn Today
+      </Typography>
 
-      <h1 className="text-3xl font-bold mb-4 text-center text-gray-900">
-      Learn Today
-      </h1>
-      <div className="space-y-6">
-        { 
-        lessons.map((lesson) => (
-          <LessonCard key={lesson.id} lesson={lesson} />
-        ))}
-      </div>
-    </div>
+      {lessons.map((lesson) => (
+        <LessonCard key={lesson.id} lesson={lesson} />
+      ))}
+    </Stack>
   );
 };
 

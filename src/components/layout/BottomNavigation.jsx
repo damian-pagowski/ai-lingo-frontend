@@ -1,36 +1,32 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import BottomNavigation from "@mui/material/BottomNavigation";
-import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import RestoreIcon from "@mui/icons-material/Restore";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import Paper from '@mui/material/Paper';
-import CssBaseline from '@mui/material/CssBaseline';
+import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
+import { Home, MenuBook, Person, Settings, ExitToApp } from '@mui/icons-material';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function SimpleBottomNavigation() {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const navigate = useNavigate();
+
+  // const handleLogout = () => {
+  //   localStorage.removeItem('token');
+  //   navigate('/login');
+  // };
 
   return (
-    <>
-          {/* <CssBaseline /> */}
-    
-    <Paper
-      sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
-      elevation={3}
-    >
+    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
       <BottomNavigation
         showLabels
         value={value}
-        onChange={(event, newValue) => {
+        onChange={(_event, newValue) => {
           setValue(newValue);
         }}
       >
-        <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
-        <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
-        <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
+        <BottomNavigationAction label="Home" icon={<Home />} onClick={() => navigate('/dashboard')} />
+        <BottomNavigationAction label="Lessons" icon={<MenuBook />} onClick={() => navigate('/lessons')} />
+        <BottomNavigationAction label="Profile" icon={<Person />} onClick={() => navigate('/profile')} />
+        {/* <BottomNavigationAction label="Settings" icon={<Settings />} onClick={() => navigate('/settings')} /> */}
+        {/* <BottomNavigationAction label="Logout" icon={<ExitToApp />} onClick={handleLogout} /> */}
       </BottomNavigation>
     </Paper>
-    </>
   );
-}
+};

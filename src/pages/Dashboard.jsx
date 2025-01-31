@@ -3,11 +3,19 @@ import Achievements from "../components/Achievements";
 import { getUserProfile } from "../api/userApi";
 import NextStep from "../components/NextStep";
 import ProgressOverview from "../components/ProgressOverview";
+import Stack from "@mui/material/Stack";
+import CssBaseline from "@mui/material/CssBaseline";
+import * as React from "react";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
 
-const Dashboard = () => {
+import BorderLinearProgress from "@mui/material/LinearProgress";
+
+const Dashboard2 = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [mode, setMode] = React.useState("dark");
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -36,18 +44,39 @@ const Dashboard = () => {
   const completedLessons = parseInt(user.progress.split("/")[0], 10);
   const totalLessons = parseInt(user.progress.split("/")[1], 10);
 
-  return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-4 text-gray-900">
-        Hi, {user.name} 👋
-      </h1>
-      <p className="text-lg text-gray-700 mb-6">
-        Current Course: {user.course_name}
-      </p>
-      <p className="text-lg text-gray-700 mb-6">Learning Level: {user.level}</p>
+  const progressPercentage =
+    totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
 
+  return (
+    <Stack
+      sx={{
+        justifyContent: "center",
+        height: { xs: "100%", sm: "100dvh" },
+        p: 2,
+      }}
+    >
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{
+          mx: "auto",
+          mb: 2,
+        }}
+      >
+        Hi, {user.name} 👋
+      </Typography>
+
+      <Stack spacing={2}>
+        <Typography variant="body1" gutterBottom>
+          Current Course: {user.course_name}
+        </Typography>
+
+        <Typography variant="body1" gutterBottom>
+          Learning Level: {user.level}
+        </Typography>
+      </Stack>
       <ProgressOverview
-        completedLessons={completedLessons}
+        completedLessons={progressPercentage}
         totalLessons={totalLessons}
         streak={user.streak}
       />
@@ -62,8 +91,8 @@ const Dashboard = () => {
           totalLessons={user.totalLessons}
         />
       )}
-    </div>
+    </Stack>
   );
 };
 
-export default Dashboard;
+export default Dashboard2;

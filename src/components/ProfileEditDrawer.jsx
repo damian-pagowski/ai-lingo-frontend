@@ -1,13 +1,31 @@
-import Button from './Button';
+import * as React from "react";
 
-const ProfileEditDrawer = ({ isOpen, onClose, formData, onInputChange, onSubmit }) => {
+import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import { Typography } from "@mui/material";
+
+const ProfileEditDrawer = ({
+  isOpen,
+  onClose,
+  formData,
+  onInputChange,
+  onSubmit,
+}) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white p-6 border-t border-gray-300 shadow-lg">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">Edit Profile</h2>
-      <div className="space-y-4">
-        <input
+    <Drawer anchor={"bottom"} open={onClose} onClose={onClose}>
+      <Box
+        component="form"
+        onSubmit={onSubmit}
+        sx={{ display: "flex", flexDirection: "column", gap: 2, mx: 4, my: 2 }}
+      >
+        <Typography component="h4" sx={{ mx: "auto" }}>
+          Edit Your Details
+        </Typography>
+        <TextField
           type="text"
           name="name"
           placeholder="Your Name"
@@ -15,7 +33,8 @@ const ProfileEditDrawer = ({ isOpen, onClose, formData, onInputChange, onSubmit 
           onChange={onInputChange}
           className="w-full p-2 border border-gray-300 rounded-lg"
         />
-        <input
+
+        <TextField
           type="email"
           name="email"
           placeholder="Your Email"
@@ -23,16 +42,12 @@ const ProfileEditDrawer = ({ isOpen, onClose, formData, onInputChange, onSubmit 
           onChange={onInputChange}
           className="w-full p-2 border border-gray-300 rounded-lg"
         />
-        <div className="flex justify-between">
-          <Button className="bg-gray-500 hover:bg-gray-600" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button className="bg-blue-500 hover:bg-blue-600" onClick={onSubmit}>
-            Save
-          </Button>
-        </div>
-      </div>
-    </div>
+        <Box sx={{ display: "flex", flexDirection: "row", gap: 1, my: 2 }}>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onSubmit}>Save</Button>
+        </Box>
+      </Box>
+    </Drawer>
   );
 };
 

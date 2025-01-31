@@ -1,7 +1,16 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { getLessonById } from '../api/lessonApi';
-import Button from '../components/Button';
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getLessonById } from "../api/lessonApi";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import { Box } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import TextField from "@mui/material/TextField";
 
 const LessonDetail = () => {
   const { id } = useParams();
@@ -17,8 +26,8 @@ const LessonDetail = () => {
         const data = await getLessonById(id);
         setLesson(data);
       } catch (err) {
-        console.log(err)
-        setError('Failed to load lesson');
+        console.log(err);
+        setError("Failed to load lesson");
       } finally {
         setLoading(false);
       }
@@ -35,61 +44,89 @@ const LessonDetail = () => {
     alert(`Submitted Answers: ${JSON.stringify(answers)}`);
   };
 
-  if (loading) return <div className="text-center mt-20 text-gray-500">Loading lesson...</div>;
-  if (error) return <div className="text-center mt-20 text-red-500">{error}</div>;
+  if (loading)
+    return (
+      <div className="text-center mt-20 text-gray-500">Loading lesson...</div>
+    );
+  if (error)
+    return <div className="text-center mt-20 text-red-500">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-4 text-gray-900">{lesson.title}</h1>
-      <p className="text-lg text-gray-700 mb-6">Difficulty: {lesson.difficulty}</p>
+    <Stack
+      sx={{
+        justifyContent: "center",
+        height: { xs: "100%", sm: "100dvh" },
+        p: 2,
+      }}
+    >
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{
+          mx: "auto",
+          mb: 2,
+        }}
+      >
+        {lesson.title}
+      </Typography>
+      <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
+        Difficulty: {lesson.difficulty}
+      </Typography>
 
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Lesson Content</h2>
-        <p className="text-gray-700 mb-4">{lesson.content}</p>
-      </div>
+      <Typography variant="h6">Exercises</Typography>
 
-      <h3 className="text-xl font-bold mt-6 mb-4 text-gray-900">Exercises</h3>
       {lesson.exercises.map((exercise) => (
-        <div key={exercise.id} className="mb-6 bg-white p-4 rounded-lg shadow-md border border-gray-300">
-          <p className="text-lg text-gray-800 mb-2">{exercise.question}</p>
-          {exercise.type === 'multiple_choice' ? (
-            <div className="space-y-2">
-              {JSON.parse(exercise.options).map((option, index) => (
-                <label key={index} className="block">
-                  <input
-                    type="radio"
-                    name={`exercise-${exercise.id}`}
-                    value={option}
-                    onChange={() => handleAnswerChange(exercise.id, option)}
-                    className="mr-2"
-                  />
-                  {option}
-                </label>
-              ))}
-            </div>
-          ) : (
-            <input
-              type="text"
-              className="w-full border border-gray-300 p-2 rounded-lg"
-              placeholder="Your answer"
-              onChange={(e) => handleAnswerChange(exercise.id, e.target.value)}
-            />
-          )}
-        </div>
+        <Card key={lesson.id} sx={{ my: 2 }}>
+          <CardContent>
+            <Typography
+              gutterBottom
+              sx={{ color: "text.secondary", fontSize: 14 }}
+            >
+              {exercise.question}
+            </Typography>
+
+            <Typography variant="body2">
+              {exercise.type === "multiple_choice" ? (
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  defaultValue="female"
+                  name="radio-buttons-group"
+                >
+                  {JSON.parse(exercise.options).map((option, index) => (
+                    <FormControlLabel
+                      key={index}
+                      control={<Radio />}
+                      value={option}
+                      label={option}
+                      onChange={() => handleAnswerChange(exercise.id, option)}
+                    />
+                  ))}
+                </RadioGroup>
+              ) : (
+                <TextField
+                sx={{my:1}}
+                  type="text"
+                  placeholder="Your answer"
+                  fullWidth
+                  onChange={(e) =>
+                    handleAnswerChange(exercise.id, e.target.value)
+                  }
+                  variant="outlined"
+                />
+              )}
+            </Typography>
+          </CardContent>
+        </Card>
       ))}
-
-      <Button onClick={handleSubmit} className="bg-green-500 hover:bg-green-600 mt-4">
-        Submit Answers
-      </Button>
-
-      <div className="mt-6 flex justify-between">
-        <Button onClick={() => navigate(`/lessons/${parseInt(id) - 1}`)}>← Previous</Button>
-        <Button onClick={() => navigate('/lessons')} className="bg-gray-500 hover:bg-gray-600">
-          Back to Lessons
+      <Box>
+        <Button
+          onClick={handleSubmit}
+          className="bg-green-500 hover:bg-green-600 mt-4"
+        >
+          Submit Answers
         </Button>
-        <Button onClick={() => navigate(`/lessons/${parseInt(id) + 1}`)}>Next →</Button>
-      </div>
-    </div>
+      </Box>
+    </Stack>
   );
 };
 

@@ -1,14 +1,12 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Card from "../components/Card";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -45,8 +43,6 @@ export default function SignUp() {
   };
 
   return (
-    <ThemeProvider theme={createTheme({ palette: {mode: 'dark'} })}>
-      <CssBaseline />
       <Stack
         sx={{
           justifyContent: "center",
@@ -135,6 +131,5 @@ export default function SignUp() {
           </Alert>
         )}
       </Stack>
-    </ThemeProvider>
   );
 }
