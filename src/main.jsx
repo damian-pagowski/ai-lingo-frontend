@@ -7,7 +7,6 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import LessonList from "./pages/LessonList";
 import Dashboard from "./pages/Dashboard";
-import LessonExercise from "./pages/LessonExercise";
 import LessonDetail from "./pages/LessonDetail";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
@@ -65,7 +64,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             />
 
             <Route path="/lessons/:id" element={<LessonDetail />} />
-            <Route path="/lessons/:id/exercise" element={<LessonExercise />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/setup" element={<UserSetup />} />

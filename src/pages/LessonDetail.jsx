@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getLessonById } from "../api/lessonApi";
 import Typography from "@mui/material/Typography";
@@ -11,14 +11,17 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
+import { submitLessonProgress } from "../api/progressApi";
+import LessonResult from '../components/LessonResult';
 
 const LessonDetail = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [lesson, setLesson] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [answers, setAnswers] = useState({});
+  const [score, setScore] = useState(0);
+  const [showResult, setShowResult] = useState(false);
 
   useEffect(() => {
     const fetchLesson = async () => {
@@ -36,12 +39,28 @@ const LessonDetail = () => {
     fetchLesson();
   }, [id]);
 
+  useEffect(() => {
+    console.log(JSON.stringify(lesson));
+  }, [lesson]);
+
   const handleAnswerChange = (exerciseId, value) => {
     setAnswers((prev) => ({ ...prev, [exerciseId]: value }));
   };
 
-  const handleSubmit = () => {
-    alert(`Submitted Answers: ${JSON.stringify(answers)}`);
+  // const handleSubmit = async () => {
+  //   const result = await submitLessonProgress(lesson.id, answers);
+
+  //   console.log(`Submitted Answers: ${JSON.stringify(result)}`);
+  // };
+
+  const handleSubmit = async () => {
+    try {
+      const result = await submitLessonProgress(lesson.id, answers);
+      setScore(result.score); // Assuming API returns score
+      setShowResult(true);
+    } catch (error) {
+      alert('Failed to submit progress. Try again.');
+    }
   };
 
   if (loading)
@@ -76,7 +95,7 @@ const LessonDetail = () => {
       <Typography variant="h6">Exercises</Typography>
 
       {lesson.exercises.map((exercise) => (
-        <Card key={lesson.id} sx={{ my: 2 }}>
+        <Card key={exercise.id} sx={{ my: 2 }}>
           <CardContent>
             <Typography
               gutterBottom
@@ -104,7 +123,7 @@ const LessonDetail = () => {
                 </RadioGroup>
               ) : (
                 <TextField
-                sx={{my:1}}
+                  sx={{ my: 1 }}
                   type="text"
                   placeholder="Your answer"
                   fullWidth
@@ -126,6 +145,12 @@ const LessonDetail = () => {
           Submit Answers
         </Button>
       </Box>
+      <LessonResult
+        score={score}
+        exercisesNumber={lesson.exercises.length}
+        open={showResult}
+        onClose={() => setShowResult(false)}
+      />
     </Stack>
   );
 };
