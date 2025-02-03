@@ -12,7 +12,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 import { submitLessonProgress } from "../api/progressApi";
-import LessonResult from '../components/LessonResult';
+import LessonResult from "../components/LessonResult";
 
 const LessonDetail = () => {
   const { id } = useParams();
@@ -47,19 +47,13 @@ const LessonDetail = () => {
     setAnswers((prev) => ({ ...prev, [exerciseId]: value }));
   };
 
-  // const handleSubmit = async () => {
-  //   const result = await submitLessonProgress(lesson.id, answers);
-
-  //   console.log(`Submitted Answers: ${JSON.stringify(result)}`);
-  // };
-
   const handleSubmit = async () => {
     try {
       const result = await submitLessonProgress(lesson.id, answers);
-      setScore(result.score); // Assuming API returns score
+      setScore(result.score);
       setShowResult(true);
     } catch (error) {
-      alert('Failed to submit progress. Try again.');
+      alert("Failed to submit progress. Try again.");
     }
   };
 
@@ -104,46 +98,41 @@ const LessonDetail = () => {
               {exercise.question}
             </Typography>
 
-            <Typography variant="body2">
-              {exercise.type === "multiple_choice" ? (
-                <RadioGroup
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  defaultValue="female"
-                  name="radio-buttons-group"
-                >
-                  {JSON.parse(exercise.options).map((option, index) => (
-                    <FormControlLabel
-                      key={index}
-                      control={<Radio />}
-                      value={option}
-                      label={option}
-                      onChange={() => handleAnswerChange(exercise.id, option)}
-                    />
-                  ))}
-                </RadioGroup>
-              ) : (
-                <TextField
-                  sx={{ my: 1 }}
-                  type="text"
-                  placeholder="Your answer"
-                  fullWidth
-                  onChange={(e) =>
-                    handleAnswerChange(exercise.id, e.target.value)
-                  }
-                  variant="outlined"
-                />
-              )}
-            </Typography>
+            {/* 🔹 Removed Typography here - FIXED */}
+            {exercise.type === "multiple_choice" ? (
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                defaultValue="female"
+                name="radio-buttons-group"
+              >
+                {JSON.parse(exercise.options).map((option, index) => (
+                  <FormControlLabel
+                    key={index}
+                    control={<Radio />}
+                    value={option}
+                    label={option}
+                    onChange={() => handleAnswerChange(exercise.id, option)}
+                  />
+                ))}
+              </RadioGroup>
+            ) : (
+              <TextField
+                sx={{ my: 1 }}
+                type="text"
+                placeholder="Your answer"
+                fullWidth
+                onChange={(e) =>
+                  handleAnswerChange(exercise.id, e.target.value)
+                }
+                variant="outlined"
+              />
+            )}
           </CardContent>
         </Card>
       ))}
-      <Box>
-        <Button
-          onClick={handleSubmit}
-          className="bg-green-500 hover:bg-green-600 mt-4"
-        >
-          Submit Answers
-        </Button>
+
+      <Box sx={{ mb: 4, mx: "auto" }}>
+        <Button onClick={handleSubmit}>Submit Answers</Button>
       </Box>
       <LessonResult
         score={score}

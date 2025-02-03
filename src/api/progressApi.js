@@ -9,3 +9,9 @@ export const submitLessonProgress = async (lessonId, answers) => {
     }),
   });
 };
+
+export const getUserProgress = async () => {
+  return await apiClient("progress", {
+    method: "GET",
+  });
+};

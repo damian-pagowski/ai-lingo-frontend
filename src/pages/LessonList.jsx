@@ -39,17 +39,22 @@ const LessonList = () => {
         p: 2,
       }}
     >
-      <Typography variant="h5" gutterBottom
-      sx={{
-        mx: "auto",
-        mb:2
-      }}>
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{
+          mx: "auto",
+          mb: 2,
+        }}
+      >
         Learn Today
       </Typography>
 
-      {lessons.map((lesson) => (
-        <LessonCard key={lesson.id} lesson={lesson} />
-      ))}
+      {lessons
+        .sort((a, b) => (a.status === "not_started" ? -1 : 1))
+        .map((lesson) => (
+          <LessonCard key={lesson.id} lesson={lesson} />
+        ))}
     </Stack>
   );
 };

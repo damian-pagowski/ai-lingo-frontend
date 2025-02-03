@@ -7,6 +7,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
+import DoneIcon from '@mui/icons-material/Done';
 
 const LessonCard = ({ lesson }) => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const LessonCard = ({ lesson }) => {
   };
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 345 , my:2}}>
       <CardMedia
         sx={{ height: 140 }}
         image="public/school.jpg"
@@ -35,9 +36,14 @@ const LessonCard = ({ lesson }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={handleStartLesson}>
-          Start Lesson
-        </Button>
+        {lesson.status == "completed" ? (
+          <DoneIcon sx={{ mx: 'auto'}}/>
+        ) : (
+          <Button sx={{ mx: 'auto'}}
+          size="small" onClick={handleStartLesson}>
+            Start Lesson
+          </Button>
+        )}
       </CardActions>
     </Card>
   );
