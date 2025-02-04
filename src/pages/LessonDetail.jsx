@@ -11,7 +11,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
-import { submitLessonProgress } from "../api/progressApi";
+import { submitLessonProgress as submitAnswers } from "../api/progressApi";
 import LessonResult from "../components/LessonResult";
 
 const LessonDetail = () => {
@@ -20,8 +20,15 @@ const LessonDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [answers, setAnswers] = useState({});
-  const [score, setScore] = useState(0);
+  const [result, setResult] = useState({});
   const [showResult, setShowResult] = useState(false);
+
+  useEffect(() => {
+    console.log(result);
+    if (result && result.results) {
+      setShowResult(true);
+    }
+  }, [result]);
 
   useEffect(() => {
     const fetchLesson = async () => {
@@ -39,19 +46,14 @@ const LessonDetail = () => {
     fetchLesson();
   }, [id]);
 
-  useEffect(() => {
-    console.log(JSON.stringify(lesson));
-  }, [lesson]);
-
   const handleAnswerChange = (exerciseId, value) => {
     setAnswers((prev) => ({ ...prev, [exerciseId]: value }));
   };
 
   const handleSubmit = async () => {
     try {
-      const result = await submitLessonProgress(lesson.id, answers);
-      setScore(result.score);
-      setShowResult(true);
+      const result = await submitAnswers(lesson.id, answers);
+      setResult(result);
     } catch (error) {
       alert("Failed to submit progress. Try again.");
     }
@@ -135,8 +137,7 @@ const LessonDetail = () => {
         <Button onClick={handleSubmit}>Submit Answers</Button>
       </Box>
       <LessonResult
-        score={score}
-        exercisesNumber={lesson.exercises.length}
+        result={result}
         open={showResult}
         onClose={() => setShowResult(false)}
       />

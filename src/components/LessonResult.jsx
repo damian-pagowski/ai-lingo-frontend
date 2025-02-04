@@ -1,20 +1,28 @@
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { Gauge } from '@mui/x-charts/Gauge';
+import * as React from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+  List,
+  ListItem,
+} from "@mui/material";
+import { Gauge } from "@mui/x-charts/Gauge";
 
-const LessonResult = ({ score, exercisesNumber, open, onClose }) => {
+const LessonResult = ({ result, open, onClose }) => {
   const navigate = useNavigate();
 
   const handleConfirm = () => {
     onClose();
-    navigate('/lessons');
+    navigate("/lessons");
   };
+  console.log(JSON.stringify(result));
+  if (!(result && result.topicProgress)) {
+    return;
+  }
 
   return (
     <Dialog
@@ -23,15 +31,29 @@ const LessonResult = ({ score, exercisesNumber, open, onClose }) => {
       aria-labelledby="lesson-result-title"
       aria-describedby="lesson-result-description"
     >
-      <DialogTitle id="lesson-result-title">
-        Lesson Completed!
-      </DialogTitle>
+      <DialogTitle id="lesson-result-title">Lesson Completed!</DialogTitle>
       <DialogContent>
-        <DialogContentText id="lesson-result-description">
-          Your score is <strong>{score}</strong>
-          <Gauge width={100} height={100} value={score} />
+        <Typography variant="h6" gutterBottom>
+          Your Score: {result.score}%
+        </Typography>
 
-        </DialogContentText>
+        <Gauge
+          width={100}
+          value={result.correctAnswers / result.totalQuestions}
+          height={100}
+        />
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Topic Progress:
+        </Typography>
+        <List>
+          {Object.entries(result.topicProgress).map(([topic, score]) => (
+            <ListItem key={topic}>
+              <Typography>
+                - {topic.replace("_", " ")}: {score}%
+              </Typography>
+            </ListItem>
+          ))}
+        </List>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleConfirm} autoFocus>
