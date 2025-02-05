@@ -25,9 +25,15 @@ const UserSetup = () => {
     level: "",
     goals: [],
     areas: [],
+    daily_lesson_commitment: 1, 
   });
 
-  const steps = ["General Knowledge", "Learning Goals", "Vocabulary Focus"];
+  const steps = [
+    "General Knowledge",
+    "Learning Goals",
+    "Vocabulary Focus",
+    "Daily Commitment",
+  ];
 
   const handleNext = () => {
     setStep((prev) => prev + 1);
@@ -51,16 +57,21 @@ const UserSetup = () => {
     }));
   };
 
+  const handleCommitmentChange = (event) => {
+    setFormData({ ...formData, daily_lesson_commitment: Number(event.target.value) });
+  };
+
   const handleSubmit = async () => {
     try {
       await saveUserPreferences({
         level: formData.level,
         goals: formData.goals,
         domains: formData.areas,
+        daily_lesson_commitment: formData.daily_lesson_commitment,
       });
-  
+
       await createInitialLesson();
-  
+
       navigate("/lessons");
     } catch (error) {
       console.error("Error saving preferences or generating lesson:", error);
@@ -150,6 +161,27 @@ const UserSetup = () => {
                   />
                 ))}
               </FormGroup>
+            </Box>
+          )}
+
+          {/* Step 4 - Daily Commitment */}
+          {step === 3 && (
+            <Box>
+              <Typography variant="h6">How many lessons per day do you want to complete?</Typography>
+              <RadioGroup
+                name="daily_lesson_commitment"
+                value={formData.daily_lesson_commitment}
+                onChange={handleCommitmentChange} 
+              >
+                {[1, 3, 5].map((num) => (
+                  <FormControlLabel
+                    key={num}
+                    value={num}
+                    control={<Radio />}
+                    label={`${num} lesson${num > 1 ? "s" : ""} per day`}
+                  />
+                ))}
+              </RadioGroup>
             </Box>
           )}
 

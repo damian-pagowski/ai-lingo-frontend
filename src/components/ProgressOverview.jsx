@@ -7,14 +7,14 @@ const ProgressOverview = ({ progress }) => {
   if (!progress) return null;
 
   return (
-    <Card sx={{ minWidth: 275, p: 2, my: 2 }}>
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          Your Progress
+    <Card sx={{ minWidth: 275, p: 1, my: 1 }}>
+      <CardContent >
+        <Typography variant="h6" gutterBottom sx={{ textAlign: "center" }}>
+        Overall Progress
         </Typography>
 
-        <Typography variant="body1" sx={{ mb: 2 }}>
-          Overall Score: {progress.overallScore}%
+        <Typography variant="body1" sx={{ mb: 2, textAlign: "center" }}>
+           Score: {progress.overallScore}%
         </Typography>
 
         {Object.entries(progress.topicScores).map(([topic, data]) => (

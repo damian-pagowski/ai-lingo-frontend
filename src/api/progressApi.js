@@ -15,3 +15,10 @@ export const getUserProgress = async () => {
     method: "GET",
   });
 };
+export const getLessonTracking = async () => {
+  return await apiClient("lesson-tracking", {
+    method: "GET",
+  });
+};
+
+

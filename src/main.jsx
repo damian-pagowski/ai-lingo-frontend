@@ -28,10 +28,16 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Router>
         <div className="p-6">
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
             <Route
               path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/"
               element={
                 <ProtectedRoute>
                   <Dashboard />
@@ -43,6 +49,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               element={
                 <ProtectedRoute>
                   <LessonList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/lessons/:id"
+              element={
+                <ProtectedRoute>
+                  <LessonDetail />
                 </ProtectedRoute>
               }
             />
@@ -62,11 +76,20 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 </ProtectedRoute>
               }
             />
-
-            <Route path="/lessons/:id" element={<LessonDetail />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/setup" element={<UserSetup />} />
+                 <Route
+              path="/setup"
+              element={
+                <ProtectedRoute>
+                  <UserSetup />
+                </ProtectedRoute>
+              }
+            />
+            {/* <Route path="/setup" element={<UserSetup />} /> */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            {/* <Route path="/lessons/:id" element={<LessonDetail />} /> */}
+            {/* <Route path="/profile" element={<Profile />} /> */}
+            {/* <Route path="/settings" element={<Settings />} /> */}
             {/* <Route path="/signup2" element={<Signup2 />} />
         <Route path="/login2" element={<Login2 />} /> */}
             {/* <Route path="/lessons" element={<LessonList />} /> */}

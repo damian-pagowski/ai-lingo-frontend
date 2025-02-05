@@ -18,3 +18,17 @@ export const createInitialLesson = async () => {
     body: JSON.stringify({}),
   });
 };
+
+export const createLesson = async () => {
+  return await apiClient(`create-lesson`, {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+};
+
+export const createAiLesson = async () => {
+  return await apiClient(`create-ai-lesson`, {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+};

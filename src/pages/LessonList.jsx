@@ -3,6 +3,7 @@ import { getLessons } from "../api/lessonApi";
 import LessonCard from "../components/LessonCard";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import CreateLesson from "../components/CreateLesson"; 
 
 const LessonList = () => {
   const [lessons, setLessons] = useState([]);
@@ -30,6 +31,8 @@ const LessonList = () => {
     );
   if (error)
     return <div className="text-center mt-20 text-red-500">{error}</div>;
+  const notStartedLessons = lessons.filter((lesson) => lesson.status === "not_started");
+
 
   return (
     <Stack
@@ -49,7 +52,7 @@ const LessonList = () => {
       >
         Learn Today
       </Typography>
-
+      {notStartedLessons.length == 0 && <CreateLesson />}
       {lessons
         .sort((a, b) => (a.status === "not_started" ? -1 : 1))
         .map((lesson) => (

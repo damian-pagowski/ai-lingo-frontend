@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getUserProfile } from "../api/userApi";
-import NextStep from "../components/NextStep";
+import DailyLessonStatus from "../components/DailyLessonStatus";
 import ProgressOverview from "../components/ProgressOverview";
 import Stack from "@mui/material/Stack";
 import * as React from "react";
@@ -76,10 +76,10 @@ const Dashboard = () => {
           Current Course: {user?.course_name || "Not Assigned"}
         </Typography>
       </Stack>
-      {progress && <ProgressOverview progress={progress} />}
-      {user?.current_lesson_id > 0 && (  
-        <NextStep lessonId={user.current_lesson_id} />
+      {user?.current_lesson_id > 0 && (
+        <DailyLessonStatus lessonId={user.current_lesson_id} />
       )}
+      {progress && <ProgressOverview progress={progress} />}
     </Stack>
   );
 };
