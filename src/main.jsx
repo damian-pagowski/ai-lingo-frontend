@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./index.css";
-
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import LessonList from "./pages/LessonList";
@@ -15,16 +14,15 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import BottomNavigation from "./components/layout/BottomNavigation";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { ThemeContextProvider } from "./context/ThemeContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ThemeProvider theme={createTheme({ palette: { mode: "dark" } })}>
+    <ThemeContextProvider>
       <CssBaseline />
-
       <Router>
         <div className="p-6">
           <Routes>
@@ -76,7 +74,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 </ProtectedRoute>
               }
             />
-                 <Route
+            <Route
               path="/setup"
               element={
                 <ProtectedRoute>
@@ -84,20 +82,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 </ProtectedRoute>
               }
             />
-            {/* <Route path="/setup" element={<UserSetup />} /> */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            {/* <Route path="/lessons/:id" element={<LessonDetail />} /> */}
-            {/* <Route path="/profile" element={<Profile />} /> */}
-            {/* <Route path="/settings" element={<Settings />} /> */}
-            {/* <Route path="/signup2" element={<Signup2 />} />
-        <Route path="/login2" element={<Login2 />} /> */}
-            {/* <Route path="/lessons" element={<LessonList />} /> */}
-            {/* <Route path="/" element={<Dashboard />} /> */}
           </Routes>
           <BottomNavigation />
         </div>
       </Router>
-    </ThemeProvider>
+      {/* </ThemeProvider> */}
+    </ThemeContextProvider>
   </React.StrictMode>
 );

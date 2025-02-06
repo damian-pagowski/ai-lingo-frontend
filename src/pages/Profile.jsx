@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  Button,
+  Typography,
+  Stack,
+  Card,
+  CardActions,
+  CardContent,
+} from "@mui/material";
 import ProfileEditDrawer from "../components/ProfileEditDrawer";
+import NotificationSettings from "../components/NotificationSettings";
 import { getUserProfile, updateOwnProfile } from "../api/userApi";
 import { getUserPreferences } from "../api/preferencesApi";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import { useNavigate } from "react-router-dom";
+import Appearance from "../components/Appearance";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -62,7 +66,7 @@ const Profile = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login")
+    navigate("/login");
   };
 
   const handleSubmit = async () => {
@@ -119,7 +123,11 @@ const Profile = () => {
               </Typography>
             </CardContent>
             <CardActions sx={{ justifyContent: "center" }}>
-              <Button variant="outlined" onClick={() => setIsDrawerOpen(true)}>
+              <Button
+                variant="outlined"
+                sx={{ mb: 1, width: "100%" }}
+                onClick={() => setIsDrawerOpen(true)}
+              >
                 Edit Profile
               </Button>
             </CardActions>
@@ -145,15 +153,21 @@ const Profile = () => {
                 </ul>
               </CardContent>
               <CardActions sx={{ justifyContent: "center" }}>
-                <Button variant="outlined" onClick={() => navigate("/setup")}>
+                <Button
+                  variant="outlined"
+                  sx={{ mb: 1, width: "100%" }}
+                  onClick={() => navigate("/setup")}
+                >
                   Edit Preferences
                 </Button>
               </CardActions>
             </Card>
           )}
-          <Box sx={{ justifyContent: "center" }}>
-          <Button variant="outlined" onClick={handleLogout}>
-          Logout
+          <NotificationSettings />
+          <Appearance />
+          <Box sx={{ justifyContent: "center" , mb:6}}>
+            <Button variant="outlined" onClick={handleLogout}>
+              Logout
             </Button>
           </Box>
         </>

@@ -46,7 +46,7 @@ const DailyLessonStatus = ({ lessonId }) => {
 
         <Gauge
           width={100}
-          value={Math.min(tracking.completionPercentage, 100) / 100}
+          value={Math.min(tracking.completionPercentage, 100)}
           height={100}
         />
 
