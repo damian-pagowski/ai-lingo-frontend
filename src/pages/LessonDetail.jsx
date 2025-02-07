@@ -1,16 +1,20 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getLessonById } from "../api/lessonApi";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import { Box } from "@mui/material";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import TextField from "@mui/material/TextField";
+import {
+  Typography,
+  Stack,
+  Button,
+  Box,
+  Card,
+  CardContent,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  TextField,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
 import { submitLessonProgress as submitAnswers } from "../api/progressApi";
 import LessonResult from "../components/LessonResult";
 
@@ -24,8 +28,7 @@ const LessonDetail = () => {
   const [showResult, setShowResult] = useState(false);
 
   useEffect(() => {
-    console.log(result);
-    if (result && result.results) {
+    if (result?.results) {
       setShowResult(true);
     }
   }, [result]);
@@ -36,7 +39,7 @@ const LessonDetail = () => {
         const data = await getLessonById(id);
         setLesson(data);
       } catch (err) {
-        console.log(err);
+        console.error("Error fetching lesson:", err);
         setError("Failed to load lesson");
       } finally {
         setLoading(false);
@@ -61,82 +64,87 @@ const LessonDetail = () => {
 
   if (loading)
     return (
-      <div className="text-center mt-20 text-gray-500">Loading lesson...</div>
+      <Box display="flex" justifyContent="center" mt={5}>
+        <CircularProgress />
+      </Box>
     );
+
   if (error)
-    return <div className="text-center mt-20 text-red-500">{error}</div>;
+    return (
+      <Box textAlign="center" mt={5}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
 
   return (
-    <Stack>
+    <Box sx={{ maxWidth: 600, mx: "auto", width: "100%", p: 2 }}>
+      <Stack spacing={2} sx={{mb:4}}>
+        <Typography variant="h5" textAlign="center">
+          {lesson.title}
+        </Typography>
+        <Typography color="text.secondary" textAlign="center">
+          Difficulty: {lesson.difficulty}
+        </Typography>
 
-      <Typography
-        variant="h5"
-        gutterBottom
-        sx={{
-          mx: "auto",
-          mb: 2,
-        }}
-      >
-        {lesson.title}
-      </Typography>
-      <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-        Difficulty: {lesson.difficulty}
-      </Typography>
+        <Typography variant="h6">Exercises</Typography>
 
-      <Typography variant="h6">Exercises</Typography>
-
-      {lesson.exercises.map((exercise) => (
-        <Card key={exercise.id} sx={{ my: 2 }}>
-          <CardContent>
-            <Typography
-              gutterBottom
-              sx={{ color: "text.secondary", fontSize: 14 }}
-            >
-              {exercise.question}
-            </Typography>
-
-            {/* 🔹 Removed Typography here - FIXED */}
-            {exercise.type === "multiple_choice" ? (
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="female"
-                name="radio-buttons-group"
+        {lesson.exercises.map((exercise) => (
+          <Card key={exercise.id} sx={{ my: 2 }}>
+            <CardContent>
+              <Typography
+                gutterBottom
+                color="text.secondary"
+                fontSize={14}
               >
-                {JSON.parse(exercise.options).map((option, index) => (
-                  <FormControlLabel
-                    key={index}
-                    control={<Radio />}
-                    value={option}
-                    label={option}
-                    onChange={() => handleAnswerChange(exercise.id, option)}
-                  />
-                ))}
-              </RadioGroup>
-            ) : (
-              <TextField
-                sx={{ my: 1 }}
-                type="text"
-                placeholder="Your answer"
-                fullWidth
-                onChange={(e) =>
-                  handleAnswerChange(exercise.id, e.target.value)
-                }
-                variant="outlined"
-              />
-            )}
-          </CardContent>
-        </Card>
-      ))}
+                {exercise.question}
+              </Typography>
 
-      <Box sx={{ mb: 4, mx: "auto" }}>
-        <Button onClick={handleSubmit}>Submit Answers</Button>
-      </Box>
-      <LessonResult
-        result={result}
-        open={showResult}
-        onClose={() => setShowResult(false)}
-      />
-    </Stack>
+              {exercise.type === "multiple_choice" ? (
+                <RadioGroup
+                  aria-labelledby="exercise-radio-group"
+                  name={`exercise-${exercise.id}`}
+                  onChange={(e) =>
+                    handleAnswerChange(exercise.id, e.target.value)
+                  }
+                >
+                  {JSON.parse(exercise.options).map((option, index) => (
+                    <FormControlLabel
+                      key={index}
+                      control={<Radio />}
+                      value={option}
+                      label={option}
+                    />
+                  ))}
+                </RadioGroup>
+              ) : (
+                <TextField
+                  sx={{ my: 1 }}
+                  type="text"
+                  placeholder="Your answer"
+                  fullWidth
+                  onChange={(e) =>
+                    handleAnswerChange(exercise.id, e.target.value)
+                  }
+                  variant="outlined"
+                />
+              )}
+            </CardContent>
+          </Card>
+        ))}
+
+        <Box display="flex" justifyContent="center" >
+          <Button variant="contained" onClick={handleSubmit}>
+            Submit Answers
+          </Button>
+        </Box>
+
+        <LessonResult
+          result={result}
+          open={showResult}
+          onClose={() => setShowResult(false)}
+        />
+      </Stack>
+    </Box>
   );
 };
 

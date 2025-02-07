@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { getLessons } from "../api/lessonApi";
 import LessonCard from "../components/LessonCard";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import CreateLesson from "../components/CreateLesson"; 
+import CreateLesson from "../components/CreateLesson";
+import { Typography, Stack, Box, CircularProgress, Alert } from "@mui/material";
 
 const LessonList = () => {
   const [lessons, setLessons] = useState([]);
@@ -27,33 +26,36 @@ const LessonList = () => {
 
   if (loading)
     return (
-      <div className="text-center mt-20 text-gray-500">Loading lessons...</div>
+      <Box display="flex" justifyContent="center" mt={5}>
+        <CircularProgress />
+      </Box>
     );
+
   if (error)
-    return <div className="text-center mt-20 text-red-500">{error}</div>;
+    return (
+      <Box textAlign="center" mt={5}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
+
   const notStartedLessons = lessons.filter((lesson) => lesson.status === "not_started");
 
-
   return (
-    <Stack>
+    <Box sx={{ maxWidth: 600, mx: "auto", width: "100%", p: 2 , mb:4}}>
+      <Stack spacing={2}>
+        <Typography variant="h5" textAlign="center">
+          Learn Today
+        </Typography>
 
-      <Typography
-        variant="h5"
-        gutterBottom
-        sx={{
-          mx: "auto",
-          mb: 2,
-        }}
-      >
-        Learn Today
-      </Typography>
-      {notStartedLessons.length == 0 && <CreateLesson />}
-      {lessons
-        .sort((a, b) => (a.status === "not_started" ? -1 : 1))
-        .map((lesson) => (
-          <LessonCard key={lesson.id} lesson={lesson} />
-        ))}
-    </Stack>
+        {notStartedLessons.length === 0 && <CreateLesson />}
+
+        {lessons
+          .sort((a, b) => (a.status === "not_started" ? -1 : 1))
+          .map((lesson) => (
+            <LessonCard key={lesson.id} lesson={lesson} />
+          ))}
+      </Stack>
+    </Box>
   );
 };
 

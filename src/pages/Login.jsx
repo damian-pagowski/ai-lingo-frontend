@@ -1,7 +1,6 @@
-import * as React from "react";
+import React, { useState } from "react";
 import {
   Card,
-  Stack,
   Typography,
   TextField,
   Link,
@@ -11,7 +10,6 @@ import {
   FormControl,
   Alert,
 } from "@mui/material";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api/authApi";
 
@@ -33,27 +31,22 @@ const Login = () => {
   };
 
   return (
-    <Stack
-      sx={{
-        justifyContent: "center",
-        height: { xs: "100%", sm: "100dvh" },
-        p: 2,
-      }}
-    >
-      <Card variant="outlined">
+    <Box sx={{ maxWidth: 400, mx: "auto", width: "100%", p: 2 }}>
+      <Card sx={{ p: 3 }}>
         <Typography
           component="h1"
           variant="h4"
-          sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+          textAlign="center"
+          sx={{ fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
         >
           Sign in
         </Typography>
         <Box
           component="form"
           onSubmit={handleSubmit}
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+          sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}
         >
-          <FormControl>
+          <FormControl fullWidth>
             <FormLabel htmlFor="email">Email</FormLabel>
             <TextField
               id="email"
@@ -63,53 +56,41 @@ const Login = () => {
               autoComplete="email"
               autoFocus
               required
-              fullWidth
               onChange={(e) => setEmail(e.target.value)}
-              variant="outlined"
-              sx={{ ariaLabel: "email" }}
             />
           </FormControl>
-          <FormControl>
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <FormLabel htmlFor="password">Password</FormLabel>
-            </Box>
+          <FormControl fullWidth>
+            <FormLabel htmlFor="password">Password</FormLabel>
             <TextField
               name="password"
               placeholder="••••••"
               type="password"
               id="password"
               autoComplete="current-password"
-              autoFocus
               required
-              fullWidth
               onChange={(e) => setPassword(e.target.value)}
-              variant="outlined"
             />
           </FormControl>
+
           <Button type="submit" fullWidth variant="contained">
             Sign in
           </Button>
-          <Typography sx={{ textAlign: "center" }}>
+
+          <Typography textAlign="center">
             Don&apos;t have an account?{" "}
-            <span>
-              <Link href="/signup" variant="body2" sx={{ alignSelf: "center" }}>
-                Sign up
-              </Link>
-            </span>
+            <Link href="/signup" variant="body2">
+              Sign up
+            </Link>
           </Typography>
+
+          {error && (
+            <Alert severity="warning" onClose={() => setError(null)}>
+              {error}
+            </Alert>
+          )}
         </Box>
       </Card>
-      {error && (
-        <Alert
-          severity="warning"
-          onClose={() => {
-            setError(null);
-          }}
-        >
-          {error}
-        </Alert>
-      )}
-    </Stack>
+    </Box>
   );
 };
 

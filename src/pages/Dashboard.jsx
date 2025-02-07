@@ -1,80 +1,70 @@
 import { useState, useEffect } from "react";
 import { getUserProfile } from "../api/userApi";
+import { getUserProgress } from "../api/progressApi";
 import DailyLessonStatus from "../components/DailyLessonStatus";
 import ProgressOverview from "../components/ProgressOverview";
-import Stack from "@mui/material/Stack";
-import * as React from "react";
-import Typography from "@mui/material/Typography";
-import { getUserProgress } from "../api/progressApi";
+import { Stack, Typography, Box, CircularProgress, Alert } from "@mui/material";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
+  const [progress, setProgress] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [progress, setProgress] = useState(null);
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getUserProfile();
-        setUser(data || {});
+        const [userData, progressData] = await Promise.all([
+          getUserProfile(),
+          getUserProgress(),
+        ]);
+        setUser(userData || {});
+        setProgress(progressData || {});
       } catch (err) {
-        console.error("Error fetching user profile:", err);
-        setError("Failed to load user profile. Please try again.");
+        console.error("Error fetching data:", err);
+        setError("Failed to load dashboard data. Please try again.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUserProfile();
-  }, []);
-
-  useEffect(() => {
-    const fetchUserProgress = async () => {
-      try {
-        const data = await getUserProgress();
-        setProgress(data || {});
-      } catch (err) {
-        console.error("Error fetching user progress:", err);
-        setError("Failed to load user progress. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserProgress();
+    fetchData();
   }, []);
 
   if (loading) {
-    return <p className="text-center text-gray-600">Loading dashboard...</p>;
+    return (
+      <Box display="flex" justifyContent="center" mt={5}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (error) {
-    return <p className="text-center text-red-500">{error}</p>;
+    return (
+      <Box textAlign="center" mt={5}>
+        <Alert severity="error">{error}</Alert> 
+      </Box>
+    );
   }
 
   return (
-    <Stack>
-      <Typography
-        variant="h5"
-        gutterBottom
-        sx={{
-          mx: "auto",
-          mb: 2,
-        }}
-      >
-        Hi, {user?.name || "User"} 👋
-      </Typography>
+    <Box sx={{ maxWidth: 600, mx: "auto", width: "100%", p: 2 , mb:4}}>
       <Stack spacing={2}>
-        <Typography variant="body1" gutterBottom>
+        <Typography variant="h5" textAlign="center">
+          Hi, {user?.name || "User"} 👋
+        </Typography>
+
+        <Typography variant="body1" textAlign="center">
           Current Course: {user?.course_name || "Not Assigned"}
         </Typography>
+
+        {user?.current_lesson_id > 0 && (
+          <DailyLessonStatus lessonId={user.current_lesson_id} />
+        )}
+
+        {progress && <ProgressOverview progress={progress} />}
       </Stack>
-      {user?.current_lesson_id > 0 && (
-        <DailyLessonStatus lessonId={user.current_lesson_id} />
-      )}
-      {progress && <ProgressOverview progress={progress} />}
-    </Stack>
+    </Box>
   );
 };
 

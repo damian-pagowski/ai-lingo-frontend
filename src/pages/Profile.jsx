@@ -5,9 +5,7 @@ import {
   Button,
   Typography,
   Stack,
-  Card,
-  CardActions,
-  CardContent,
+  CircularProgress
 } from "@mui/material";
 import ProfileEditDrawer from "../components/ProfileEditDrawer";
 import NotificationSettings from "../components/NotificationSettings";
@@ -30,37 +28,34 @@ const Profile = () => {
   });
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
+    const fetchData = async () => {
+      setLoading(true); 
       try {
-        const data = await getUserProfile();
-        setUser(data);
+        const [userData, preferencesData] = await Promise.all([
+          getUserProfile(),
+          getUserPreferences(),
+        ]);
+  
+        setUser(userData || {});
         setFormData({
-          name: data.name || "",
-          email: data.email || "",
+          name: userData?.name || "",
+          email: userData?.email || "",
         });
+  
+        setPreferences(preferencesData?.preferences?.focus_areas
+          ? JSON.parse(preferencesData.preferences.focus_areas)
+          : []
+        );
       } catch (err) {
-        setError("Failed to fetch user profile. Please try again.");
-        console.error("Error fetching profile:", err);
+        setError("Failed to load profile. Please try again.");
+        console.error("Error fetching data:", err);
+      } finally {
+        setLoading(false); 
       }
     };
-
-    const fetchUserPreferences = async () => {
-      try {
-        const data = await getUserPreferences();
-        setPreferences(JSON.parse(data.preferences.focus_areas));
-      } catch (err) {
-        console.error("Error fetching preferences:", err);
-      }
-    };
-
-    fetchUserProfile();
-    fetchUserPreferences();
-    setLoading(false);
+  
+    fetchData();
   }, []);
-
-  useEffect(() => {
-    console.log(JSON.stringify(preferences));
-  }, [preferences]);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -83,41 +78,54 @@ const Profile = () => {
   };
 
   if (loading) {
-    return <p className="text-center text-gray-600">Loading profile...</p>;
+    return (
+      <Box display="flex" justifyContent="center" mt={5}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (error) {
-    return <p className="text-center text-red-500">{error}</p>;
+    return (
+      <Typography
+        textAlign="center"
+        color="error"
+        sx={{ width: "100%", mt: 4 }}
+      >
+        {error}
+      </Typography>
+    ); 
   }
 
   return (
-    <Stack>
-      <Typography
-        variant="h5"
-        gutterBottom
-        sx={{
-          mx: "auto",
-          mb: 2,
-        }}
-      >
-        Your Profile
-      </Typography>
-      {user && (
-        <PersonalInfoCard user={user} onEdit={() => setIsDrawerOpen(true)} />
-      )}
-      {preferences && (
-        <LearningGoalsCard
-          preferences={preferences}
-          onEdit={() => navigate("/setup")}
-        />
-      )}
-      <NotificationSettings />
-      <Appearance />
-      <Box sx={{ justifyContent: "center", mb: 6 }}>
-        <Button variant="outlined" onClick={handleLogout}>
-          Logout
-        </Button>
-      </Box>
+    <Box sx={{ maxWidth: 600, mx: "auto", width: "100%", p: 2, mb:4 }}>
+      <Stack spacing={2} sx={{ width: "100%" }}>
+        <Typography variant="h5" gutterBottom textAlign="center">
+          Your Profile
+        </Typography>
+
+        {user && (
+          <PersonalInfoCard user={user} onEdit={() => setIsDrawerOpen(true)} />
+        )}
+
+        {preferences && (
+          <LearningGoalsCard
+            preferences={preferences}
+            onEdit={() => navigate("/setup")}
+          />
+        )}
+
+        <NotificationSettings />
+        <Appearance />
+
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center"}}>
+          {" "}
+          <Button variant="outlined" sx={{ width: "100%" }} onClick={handleLogout}>
+            Logout
+          </Button>
+        </Box>
+      </Stack>
+
       <ProfileEditDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
@@ -125,7 +133,7 @@ const Profile = () => {
         onInputChange={handleInputChange}
         onSubmit={handleSubmit}
       />
-    </Stack>
+    </Box>
   );
 };
 
