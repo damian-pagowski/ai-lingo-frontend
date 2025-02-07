@@ -16,7 +16,7 @@ const Appearance = () => {
   };
 
   return (
-    <Card sx={{ minWidth: 275, my: 2 }}>
+    <Card sx={{ my: 2 }}>
       <CardContent>
         <Typography variant="h6" sx={{ my: 1 }}>
           Appearance

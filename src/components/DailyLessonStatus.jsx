@@ -33,7 +33,7 @@ const DailyLessonStatus = ({ lessonId }) => {
   if (error) return <Typography color="error">{error}</Typography>;
 
   return (
-    <Card sx={{ minWidth: 275, p: 1, mt: 2, mb:1, textAlign: "center" }}>
+    <Card sx={{ p: 1, mt: 2, mb:1, textAlign: "center" }}>
       <CardContent sx={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
         <Typography variant="h6" gutterBottom>
           Daily Lesson Progress

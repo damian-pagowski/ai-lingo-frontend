@@ -80,7 +80,7 @@ const UserSetup = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
+    <Box sx={{  mx: "auto", mt: 4 }}>
       <Stepper activeStep={step} alternativeLabel>
         {steps.map((label) => (
           <Step key={label}>

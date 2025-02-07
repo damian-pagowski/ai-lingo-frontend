@@ -1,13 +1,6 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import FormLabel from "@mui/material/FormLabel";
-import FormControl from "@mui/material/FormControl";
-import Link from "@mui/material/Link";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import Card from "../components/Card";
+import { Card, FormControl, Typography, TextField, Stack, Link, Button, FormLabel } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../api/authApi";

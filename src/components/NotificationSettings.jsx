@@ -35,7 +35,7 @@ const NotificationSettings = () => {
   };
 
   return (
-    <Card sx={{ minWidth: 275, my: 1 }}>
+    <Card sx={{ my: 1 }}>
       <CardContent>
         <Typography variant="h6" sx={{ my: 1 }}>
           Notification Settings

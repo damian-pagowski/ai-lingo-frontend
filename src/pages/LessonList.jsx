@@ -35,13 +35,8 @@ const LessonList = () => {
 
 
   return (
-    <Stack
-      sx={{
-        justifyContent: "center",
-        height: { xs: "100%", sm: "100dvh" },
-        p: 2,
-      }}
-    >
+    <Stack>
+
       <Typography
         variant="h5"
         gutterBottom

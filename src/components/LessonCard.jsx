@@ -17,7 +17,7 @@ const LessonCard = ({ lesson }) => {
   };
 
   return (
-    <Card sx={{ maxWidth: 345, my: 2 }}>
+    <Card sx={{ my: 2 }}>
       <CardMedia
         sx={{ height: 140 }}
         image="public/school.jpg"

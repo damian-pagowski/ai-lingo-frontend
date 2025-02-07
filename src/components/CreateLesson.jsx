@@ -33,7 +33,7 @@ const CreateLesson = () => {
   };
 
   return (
-    <Card sx={{ maxWidth: 345, my: 2, textAlign: "center", p: 2 }}>
+    <Card sx={{ my: 2, textAlign: "center", p: 2 }}>
       <CardContent>
         <CheckCircleIcon sx={{ fontSize: 100, color: "green", mb: 1 }} />
         <Typography gutterBottom variant="h6" component="div">

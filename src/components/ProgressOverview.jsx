@@ -7,7 +7,7 @@ const ProgressOverview = ({ progress }) => {
   if (!progress) return null;
 
   return (
-    <Card sx={{ minWidth: 275, p: 1, my: 1 }}>
+    <Card sx={{ my: 1 }}>
       <CardContent >
         <Typography variant="h6" gutterBottom sx={{ textAlign: "center" }}>
         Overall Progress

@@ -14,6 +14,8 @@ import NotificationSettings from "../components/NotificationSettings";
 import { getUserProfile, updateOwnProfile } from "../api/userApi";
 import { getUserPreferences } from "../api/preferencesApi";
 import Appearance from "../components/Appearance";
+import PersonalInfoCard from "../components/PersonalInfoCard";
+import LearningGoalsCard from "../components/LearningGoalsCard";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -89,13 +91,7 @@ const Profile = () => {
   }
 
   return (
-    <Stack
-      sx={{
-        justifyContent: "center",
-        height: { xs: "100%", sm: "100dvh" },
-        p: 2,
-      }}
-    >
+    <Stack>
       <Typography
         variant="h5"
         gutterBottom
@@ -106,74 +102,22 @@ const Profile = () => {
       >
         Your Profile
       </Typography>
-
       {user && (
-        <>
-          {/* c1 - Personal Info */}
-          <Card sx={{ minWidth: 275, my: 2 }}>
-            <CardContent>
-              <Typography variant="h6" sx={{ my: 1 }}>
-                Personal Info
-              </Typography>
-
-              <Typography variant="body2">Name: {user.name}</Typography>
-              <Typography variant="body2">Email: {user.email}</Typography>
-              <Typography variant="body2">
-                Learning Level: {user.level}
-              </Typography>
-            </CardContent>
-            <CardActions sx={{ justifyContent: "center" }}>
-              <Button
-                variant="outlined"
-                sx={{ mb: 1, width: "100%" }}
-                onClick={() => setIsDrawerOpen(true)}
-              >
-                Edit Profile
-              </Button>
-            </CardActions>
-          </Card>
-
-          {/* c2 - Learning Goals */}
-          {preferences && (
-            <Card sx={{ minWidth: 275, my: 2 }}>
-              <CardContent>
-                <Typography variant="h6" sx={{ my: 1 }}>
-                  Learning Goals
-                </Typography>
-                <ul>
-                  {preferences.map((topic, index) => (
-                    <li key={index}>
-                      <Typography variant="body2">
-                        {topic
-                          .replace(/_/g, " ")
-                          .replace(/\b\w/g, (c) => c.toUpperCase())}{" "}
-                      </Typography>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-              <CardActions sx={{ justifyContent: "center" }}>
-                <Button
-                  variant="outlined"
-                  sx={{ mb: 1, width: "100%" }}
-                  onClick={() => navigate("/setup")}
-                >
-                  Edit Preferences
-                </Button>
-              </CardActions>
-            </Card>
-          )}
-          <NotificationSettings />
-          <Appearance />
-          <Box sx={{ justifyContent: "center" , mb:6}}>
-            <Button variant="outlined" onClick={handleLogout}>
-              Logout
-            </Button>
-          </Box>
-        </>
+        <PersonalInfoCard user={user} onEdit={() => setIsDrawerOpen(true)} />
       )}
-
-      {/* Profile Edit Drawer */}
+      {preferences && (
+        <LearningGoalsCard
+          preferences={preferences}
+          onEdit={() => navigate("/setup")}
+        />
+      )}
+      <NotificationSettings />
+      <Appearance />
+      <Box sx={{ justifyContent: "center", mb: 6 }}>
+        <Button variant="outlined" onClick={handleLogout}>
+          Logout
+        </Button>
+      </Box>
       <ProfileEditDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
