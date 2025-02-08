@@ -58,9 +58,7 @@ const Dashboard = () => {
           Current Course: {user?.course_name || "Not Assigned"}
         </Typography>
 
-        {user?.current_lesson_id > 0 && (
           <DailyLessonStatus lessonId={user.current_lesson_id} />
-        )}
 
         {progress && <ProgressOverview progress={progress} />}
       </Stack>

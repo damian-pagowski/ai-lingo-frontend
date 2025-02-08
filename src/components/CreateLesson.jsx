@@ -48,9 +48,9 @@ const CreateLesson = () => {
         <Button variant="outlined" onClick={handleCreateLesson}>
           Create Lesson
         </Button>
-        <Button variant="contained" onClick={handleCreateLessonWithAI}>
+        {/* <Button variant="contained" onClick={handleCreateLessonWithAI}>
           Create with AI
-        </Button>
+        </Button> */}
       </CardActions>
     </Card>
   );

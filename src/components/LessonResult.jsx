@@ -39,7 +39,7 @@ const LessonResult = ({ result, open, onClose }) => {
 
         <Gauge
           width={100}
-          value={result.correctAnswers / result.totalQuestions}
+          value={result.correctAnswers / result.totalQuestions * 100}
           height={100}
         />
         <Typography variant="h6" sx={{ mt: 2 }}>

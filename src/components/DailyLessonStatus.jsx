@@ -53,9 +53,9 @@ const DailyLessonStatus = ({ lessonId }) => {
         <Button
           variant="outlined"
           sx={{ mt: 2 }}
-          onClick={() => navigate(`/lessons/${lessonId}`)}
+          onClick={() => navigate(`/lessons/`)}
         >
-          Start Lesson
+          Take a Lesson
         </Button>
       </CardContent>
     </Card>

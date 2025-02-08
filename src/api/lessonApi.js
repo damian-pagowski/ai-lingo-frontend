@@ -12,6 +12,12 @@ export const getLessonById = async (id) => {
   });
 };
 
+export const flagLesson = async (id) => {
+  return await apiClient(`flag-lesson/${id}`, {
+    method: "GET",
+  });
+};
+
 export const createInitialLesson = async () => {
   return await apiClient(`create-initial-lesson`, {
     method: "POST",
@@ -30,5 +36,13 @@ export const createAiLesson = async () => {
   return await apiClient(`create-ai-lesson`, {
     method: "POST",
     body: JSON.stringify({}),
+  });
+};
+
+
+export const voteExercise = async (data) => {
+  return await apiClient(`vote-exercise`, {
+    method: "POST",
+    body: JSON.stringify(data),
   });
 };

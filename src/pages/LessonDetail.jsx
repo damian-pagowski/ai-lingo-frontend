@@ -1,6 +1,6 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getLessonById } from "../api/lessonApi";
+import { getLessonById, flagLesson } from "../api/lessonApi";
 import {
   Typography,
   Stack,
@@ -14,12 +14,16 @@ import {
   TextField,
   CircularProgress,
   Alert,
+  IconButton,
 } from "@mui/material";
 import { submitLessonProgress as submitAnswers } from "../api/progressApi";
 import LessonResult from "../components/LessonResult";
+import FlagIcon from "@mui/icons-material/Flag";
+import VoteWidget from "../components/VoteWidget";
 
 const LessonDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [lesson, setLesson] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -62,6 +66,16 @@ const LessonDetail = () => {
     }
   };
 
+  const handleFlagLesson = async () => {
+    try {
+      await flagLesson(id);
+      navigate("/lessons");
+    } catch (error) {
+      console.error("Failed to flag lesson:", error);
+      alert("Failed to flag lesson. Try again.");
+    }
+  };
+
   if (loading)
     return (
       <Box display="flex" justifyContent="center" mt={5}>
@@ -77,25 +91,36 @@ const LessonDetail = () => {
     );
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", width: "100%", p: 2 }}>
-      <Stack spacing={2} sx={{mb:4}}>
+    <Box sx={{ maxWidth: 600, mx: "auto", width: "100%", p: 1 }}>
+      <Stack spacing={2} sx={{ mb: 4 }}>
         <Typography variant="h5" textAlign="center">
           {lesson.title}
         </Typography>
-        <Typography color="text.secondary" textAlign="center">
-          Difficulty: {lesson.difficulty}
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          <Typography
+            color="text.secondary"
+            sx={{ flexGrow: 1, textAlign: "center" }}
+          >
+            Difficulty: {lesson.difficulty}
+          </Typography>
+          <IconButton onClick={handleFlagLesson} size="small" sx={{ ml: 2 }}>
+            <FlagIcon />
+          </IconButton>
+        </Box>
 
         <Typography variant="h6">Exercises</Typography>
 
         {lesson.exercises.map((exercise) => (
-          <Card key={exercise.id} sx={{ my: 2 }}>
+          <Card key={exercise.id} sx={{ my: 0 }}>
             <CardContent>
-              <Typography
-                gutterBottom
-                color="text.secondary"
-                fontSize={14}
-              >
+              <Typography gutterBottom color="text.secondary" fontSize={14}>
                 {exercise.question}
               </Typography>
 
@@ -128,11 +153,21 @@ const LessonDetail = () => {
                   variant="outlined"
                 />
               )}
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  width: "100%",
+                }}
+              >
+                <VoteWidget exerciseId={exercise.id} score={exercise.score} />
+              </Box>
             </CardContent>
           </Card>
         ))}
 
-        <Box display="flex" justifyContent="center" >
+        <Box display="flex" justifyContent="center">
           <Button variant="contained" onClick={handleSubmit}>
             Submit Answers
           </Button>
