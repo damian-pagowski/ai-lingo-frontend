@@ -1,6 +1,7 @@
 import { Card, CardContent, Typography, CardActions, Button } from "@mui/material";
 
 const LearningGoalsCard = ({ preferences, onEdit }) => {
+  
   return (
     <Card sx={{ my: 2 }}>
       <CardContent>
