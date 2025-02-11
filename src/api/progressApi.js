@@ -21,4 +21,9 @@ export const getLessonTracking = async () => {
   });
 };
 
+export const getRanking = async () => {
+  return await apiClient("ranking", {
+    method: "GET",
+  });
+};
 

@@ -1,8 +1,8 @@
 import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
-import { Home, MenuBook, Person, Settings, ExitToApp } from '@mui/icons-material';
+import { Home, MenuBook, Person } from '@mui/icons-material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import StarIcon from '@mui/icons-material/Star';
 export default function SimpleBottomNavigation() {
   const [value, setValue] = useState(0);
   const navigate = useNavigate();
@@ -16,7 +16,10 @@ export default function SimpleBottomNavigation() {
         }}
       >
         <BottomNavigationAction label="Home" icon={<Home />} onClick={() => navigate('/dashboard')} />
+
         <BottomNavigationAction label="Lessons" icon={<MenuBook />} onClick={() => navigate('/lessons')} />
+        <BottomNavigationAction label="Ranking" icon={<StarIcon />} onClick={() => navigate('/ranking')} />
+
         <BottomNavigationAction label="Profile" icon={<Person />} onClick={() => navigate('/profile')} />
       </BottomNavigation>
     </Paper>

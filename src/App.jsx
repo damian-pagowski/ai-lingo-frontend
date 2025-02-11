@@ -9,10 +9,19 @@ import UserSetup from "./pages/UserSetup";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { Box } from "@mui/material";
+import UserRankingScreen from "./pages/Ranking";
 
 const App = () => {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", p:1, m:1 }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        p: 1,
+        m: 1,
+      }}
+    >
       <Routes>
         <Route
           path="/dashboard"
@@ -59,6 +68,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <UserSetup />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ranking"
+          element={
+            <ProtectedRoute>
+              <UserRankingScreen />
             </ProtectedRoute>
           }
         />
