@@ -3,7 +3,7 @@ import { getDashboard } from "../api/dashboardApi";
 import DailyLessonStatus from "../components/DailyLessonStatus";
 import ProgressOverview from "../components/ProgressOverview";
 import { Stack, Typography, Box, CircularProgress, Alert } from "@mui/material";
-import StreakBox from "../components/StreakBox";
+import StreakCard from "../components/StreakCard";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -54,7 +54,7 @@ const Dashboard = () => {
         <Typography variant="body1" textAlign="center">
           Current Course: {user?.course_name || "Not Assigned"}
         </Typography>
-        <StreakBox streak={user.current_streak} longestStreak={user.longest_streak}/>
+        <StreakCard currentStreak={user.current_streak} longestStreak={user.longest_streak}/>
         <DailyLessonStatus
           daily_lesson_commitment={user.daily_lesson_commitment}
           completedLessonsCount={user.completedLessonsCount}
