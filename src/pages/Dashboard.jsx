@@ -1,32 +1,11 @@
-import { useState, useEffect } from "react";
-import { getDashboard } from "../api/dashboardApi";
 import DailyLessonStatus from "../components/DailyLessonStatus";
 import ProgressOverview from "../components/ProgressOverview";
 import { Stack, Typography, Box, CircularProgress, Alert } from "@mui/material";
 import StreakCard from "../components/StreakCard";
+import { useDashboard } from '../context/DashboardContext';
 
 const Dashboard = () => {
-  const [user, setUser] = useState(null);
-  const [progress, setProgress] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const dashboard = await getDashboard();
-        setUser(dashboard.user || {});
-        setProgress(dashboard.progress || {});
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("Failed to load dashboard data. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const { user, progress, loading, error } = useDashboard();
 
   if (loading) {
     return (
@@ -54,7 +33,7 @@ const Dashboard = () => {
         <Typography variant="body1" textAlign="center">
           Current Course: {user?.course_name || "Not Assigned"}
         </Typography>
-        <StreakCard currentStreak={user.current_streak} longestStreak={user.longest_streak}/>
+        <StreakCard />
         <DailyLessonStatus
           daily_lesson_commitment={user.daily_lesson_commitment}
           completedLessonsCount={user.completedLessonsCount}

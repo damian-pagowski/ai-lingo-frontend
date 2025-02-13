@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useContext, useState } from "react";
 import { getLessonById, flagLesson } from "../api/lessonApi";
 import {
   Typography,
@@ -20,6 +20,8 @@ import { submitLessonProgress as submitAnswers } from "../api/progressApi";
 import LessonResult from "../components/LessonResult";
 import FlagIcon from "@mui/icons-material/Flag";
 import VoteWidget from "../components/VoteWidget";
+import { useLessons } from "../context/LessonsContext";
+import { useDashboard } from '../context/DashboardContext';
 
 const LessonDetail = () => {
   const { id } = useParams();
@@ -30,6 +32,8 @@ const LessonDetail = () => {
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState({});
   const [showResult, setShowResult] = useState(false);
+  const {refreshLessons } = useLessons();
+  const { refreshDashboard } = useDashboard();
 
   useEffect(() => {
     if (result?.results) {
@@ -61,6 +65,9 @@ const LessonDetail = () => {
     try {
       const result = await submitAnswers(lesson.id, answers);
       setResult(result);
+      await refreshLessons();
+      await refreshDashboard();
+
     } catch (error) {
       alert("Failed to submit progress. Try again.");
     }

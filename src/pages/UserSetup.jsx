@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { saveUserPreferences } from "../api/preferencesApi";
 import {
@@ -17,15 +17,17 @@ import {
   CardContent,
 } from "@mui/material";
 import { createInitialLesson } from "../api/lessonApi";
+import { useDashboard } from "../context/DashboardContext";
 
 const UserSetup = () => {
+  const { refreshDashboard } = useDashboard();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({
     level: "",
     goals: [],
     areas: [],
-    daily_lesson_commitment: 1, 
+    daily_lesson_commitment: 1,
   });
 
   const steps = [
@@ -58,7 +60,10 @@ const UserSetup = () => {
   };
 
   const handleCommitmentChange = (event) => {
-    setFormData({ ...formData, daily_lesson_commitment: Number(event.target.value) });
+    setFormData({
+      ...formData,
+      daily_lesson_commitment: Number(event.target.value),
+    });
   };
 
   const handleSubmit = async () => {
@@ -71,7 +76,7 @@ const UserSetup = () => {
       });
 
       await createInitialLesson();
-
+      await refreshDashboard();
       navigate("/lessons");
     } catch (error) {
       console.error("Error saving preferences or generating lesson:", error);
@@ -80,7 +85,7 @@ const UserSetup = () => {
   };
 
   return (
-    <Box sx={{  mx: "auto", mt: 4 }}>
+    <Box sx={{ mx: "auto", mt: 4 }}>
       <Stepper activeStep={step} alternativeLabel>
         {steps.map((label) => (
           <Step key={label}>
@@ -98,8 +103,14 @@ const UserSetup = () => {
           {/* Step 1 - Language Level */}
           {step === 0 && (
             <Box>
-              <Typography variant="h6">How much do you know already?</Typography>
-              <RadioGroup name="level" value={formData.level} onChange={handleChange}>
+              <Typography variant="h6">
+                How much do you know already?
+              </Typography>
+              <RadioGroup
+                name="level"
+                value={formData.level}
+                onChange={handleChange}
+              >
                 {[
                   "Nothing, just starting and have no contact with the language.",
                   "I can understand TV shows or movies in the language.",
@@ -107,7 +118,12 @@ const UserSetup = () => {
                   "I can have simple conversations.",
                   "I am advanced but want to perfect my skills.",
                 ].map((option) => (
-                  <FormControlLabel key={option} value={option} control={<Radio />} label={option} />
+                  <FormControlLabel
+                    key={option}
+                    value={option}
+                    control={<Radio />}
+                    label={option}
+                  />
                 ))}
               </RadioGroup>
             </Box>
@@ -144,22 +160,26 @@ const UserSetup = () => {
           {/* Step 3 - Vocabulary Focus */}
           {step === 2 && (
             <Box>
-              <Typography variant="h6">Which areas of vocabulary would you like to focus on?</Typography>
+              <Typography variant="h6">
+                Which areas of vocabulary would you like to focus on?
+              </Typography>
               <FormGroup>
-                {["Daily life", "Work", "Travel", "Social situations"].map((area) => (
-                  <FormControlLabel
-                    key={area}
-                    control={
-                      <Checkbox
-                        name="areas"
-                        value={area}
-                        checked={formData.areas.includes(area)}
-                        onChange={handleCheckboxChange}
-                      />
-                    }
-                    label={area}
-                  />
-                ))}
+                {["Daily life", "Work", "Travel", "Social situations"].map(
+                  (area) => (
+                    <FormControlLabel
+                      key={area}
+                      control={
+                        <Checkbox
+                          name="areas"
+                          value={area}
+                          checked={formData.areas.includes(area)}
+                          onChange={handleCheckboxChange}
+                        />
+                      }
+                      label={area}
+                    />
+                  )
+                )}
               </FormGroup>
             </Box>
           )}
@@ -167,11 +187,13 @@ const UserSetup = () => {
           {/* Step 4 - Daily Commitment */}
           {step === 3 && (
             <Box>
-              <Typography variant="h6">How many lessons per day do you want to complete?</Typography>
+              <Typography variant="h6">
+                How many lessons per day do you want to complete?
+              </Typography>
               <RadioGroup
                 name="daily_lesson_commitment"
                 value={formData.daily_lesson_commitment}
-                onChange={handleCommitmentChange} 
+                onChange={handleCommitmentChange}
               >
                 {[1, 3, 5].map((num) => (
                   <FormControlLabel
@@ -196,7 +218,10 @@ const UserSetup = () => {
               <Button
                 variant="contained"
                 onClick={handleNext}
-                disabled={(step === 0 && !formData.level) || (step === 1 && formData.goals.length === 0)}
+                disabled={
+                  (step === 0 && !formData.level) ||
+                  (step === 1 && formData.goals.length === 0)
+                }
               >
                 Next
               </Button>

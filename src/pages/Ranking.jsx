@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Typography,
@@ -12,47 +12,15 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
-import { getRanking } from "../api/progressApi";
+import { useRanking } from "../context/RankingContext";
 
 const UserRankingScreen = () => {
   const [timeFrame, setTimeFrame] = useState(0);
-  const [rankingData, setRankingData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [userRank, setUserRank] = useState(null);
+  const { rankingData, userRank, loading, error } = useRanking();
 
   const handleChange = (event, newValue) => {
     setTimeFrame(newValue);
   };
-
-  useEffect(() => {
-    console.log(timeFrame);
-    console.log(JSON.stringify(rankingData));
-  }, [timeFrame]);
-
-  useEffect(() => {
-    const fetchRanking = async () => {
-      setLoading(true);
-      try {
-        const data = await getRanking();
-        if (data) {
-          setRankingData([
-            data.dailyRanking,
-            data.weeklyRanking,
-            data.allTimeRanking,
-          ]);
-          setUserRank(data.user);
-        }
-      } catch (err) {
-        console.error("Failed to fetch ranking:", err);
-        setError("Failed to load rankings. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRanking();
-  }, []);
 
   if (loading) {
     return (

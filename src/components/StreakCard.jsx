@@ -17,10 +17,16 @@ const StreakValue = styled(Typography)(({ theme }) => ({
   margin: theme.spacing(1, 0)
 }));
 
-const StreakCard = ({ currentStreak, longestStreak }) => {
+import { useDashboard } from '../context/DashboardContext';
+
+const StreakCard = () => {
+  const { user, loading, error } = useDashboard();
+  
+  if (loading) return <div>Loading streak data...</div>;
+  if (error) return <div>Error: {error}</div>;
   const getMotivationMessage = () => {
-    if (currentStreak === 0) return 'Start your learning journey!';
-    if (currentStreak <= 3) return 'Keep going! 🔥';
+    if (user.current_streak === 0) return 'Start your learning journey!';
+    if (user.current_streak <= 3) return 'Keep going! 🔥';
     return 'Amazing streak! 🚀';
   };
 
@@ -37,7 +43,7 @@ const StreakCard = ({ currentStreak, longestStreak }) => {
         </Typography>
         
         <StreakValue variant="h4" component="div">
-          {currentStreak} Day{currentStreak !== 1 && 's'}
+          {user.current_streak} Day{user.current_streak !== 1 && 's'}
         </StreakValue>
 
         <Typography variant="body1" color="text.secondary">
@@ -46,17 +52,12 @@ const StreakCard = ({ currentStreak, longestStreak }) => {
 
         <Box mt={2}>
           <Typography variant="body2" component="div">
-            Longest Streak: {longestStreak} Days
+            Longest Streak: {user.longest_streak} Days
           </Typography>
         </Box>
       </CardContent>
     </StyledCard>
   );
-};
-
-StreakCard.propTypes = {
-  currentStreak: PropTypes.number.isRequired,
-  longestStreak: PropTypes.number.isRequired
 };
 
 export default StreakCard;

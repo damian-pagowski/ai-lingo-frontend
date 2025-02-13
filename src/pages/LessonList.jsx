@@ -1,28 +1,10 @@
-import { useState, useEffect } from "react";
-import { getLessons } from "../api/lessonApi";
+import { useLessons } from "../context/LessonsContext";
 import LessonCard from "../components/LessonCard";
 import CreateLesson from "../components/CreateLesson";
 import { Typography, Stack, Box, CircularProgress, Alert } from "@mui/material";
 
 const LessonList = () => {
-  const [lessons, setLessons] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchLessons = async () => {
-      try {
-        const data = await getLessons();
-        setLessons(data);
-      } catch (_err) {
-        setError("Failed to load lessons");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLessons();
-  }, []);
+  const { lessons, loading, error } = useLessons();
 
   if (loading)
     return (
