@@ -1,26 +1,33 @@
-import { Card, CardContent, Typography, CardActions, Button } from "@mui/material";
+import React from 'react';
+import { Card, CardContent, Typography, CardActions, Button, List, ListItem, ListItemText } from "@mui/material";
 
 const LearningGoalsCard = ({ preferences, onEdit }) => {
   
+  const formatTopic = (topic) => topic.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
   return (
     <Card sx={{ my: 2 }}>
       <CardContent>
-        <Typography variant="h6" sx={{ my: 1 }}>
+        <Typography variant="h6">
           Learning Goals
         </Typography>
-        <ul>
+        <List>
           {preferences.map((topic, index) => (
-            <li key={index}>
-              <Typography variant="body2">
-                {topic.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-              </Typography>
-            </li>
+            <ListItem key={index} disablePadding>
+              <ListItemText
+                primary={
+                  <Typography variant="body2">
+                    {formatTopic(topic)}
+                  </Typography>
+                }
+              />
+            </ListItem>
           ))}
-        </ul>
+        </List>
       </CardContent>
       <CardActions sx={{ justifyContent: "center" }}>
         <Button variant="outlined" sx={{ mb: 1, width: "100%" }} onClick={onEdit}>
-          Edit Preferences
+          Set New Goals
         </Button>
       </CardActions>
     </Card>

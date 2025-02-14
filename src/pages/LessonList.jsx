@@ -1,44 +1,42 @@
+import React from 'react';
 import { useLessons } from "../context/LessonsContext";
 import LessonCard from "../components/LessonCard";
 import CreateLesson from "../components/CreateLesson";
-import { Typography, Stack, Box, CircularProgress, Alert } from "@mui/material";
+import { Typography, Stack, Box } from "@mui/material";
+import LoadingIndicator from "../components/LoadingIndicator";
+import ErrorMessage from "../components/ErrorMessage";
 
 const LessonList = () => {
   const { lessons, loading, error } = useLessons();
 
-  if (loading)
-    return (
-      <Box display="flex" justifyContent="center" mt={5}>
-        <CircularProgress />
-      </Box>
-    );
+  if (loading) {
+    return <LoadingIndicator />;
+  }
 
-  if (error)
-    return (
-      <Box textAlign="center" mt={5}>
-        <Alert severity="error">{error}</Alert>
-      </Box>
-    );
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
 
-  const notStartedLessons = lessons.filter((lesson) => lesson.status === "not_started");
+  const notStartedLessons = lessons.filter(lesson => lesson.status === "not_started");
+  const sortedLessons = lessons.sort((a, b) => (a.status === "not_started" ? -1 : 1));
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", width: "100%", p: 2 , mb:4}}>
+    <Box sx={{ maxWidth: 600, mx: "auto", width: "100%", p: 2, mb: 4 }}>
       <Stack spacing={2}>
-        <Typography variant="h5" textAlign="center">
-          Learn Today
-        </Typography>
-
+        <Header />
         {notStartedLessons.length === 0 && <CreateLesson />}
-
-        {lessons
-          .sort((a, b) => (a.status === "not_started" ? -1 : 1))
-          .map((lesson) => (
-            <LessonCard key={lesson.id} lesson={lesson} />
-          ))}
+        {sortedLessons.map(lesson => (
+          <LessonCard key={lesson.id} lesson={lesson} />
+        ))}
       </Stack>
     </Box>
   );
 };
+
+const Header = () => (
+  <Typography variant="h5" textAlign="center">
+    Learn Today
+  </Typography>
+);
 
 export default LessonList;

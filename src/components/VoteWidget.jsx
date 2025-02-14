@@ -1,30 +1,29 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Box, IconButton, Typography } from "@mui/material";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDownward";
-import {voteExercise} from "../api/lessonApi"
-
+import { voteExercise } from "../api/lessonApi";
 
 const VoteWidget = ({ exerciseId, score }) => {
   const [votes, setVotes] = useState(score);
-  const [userVote, setUserVote] = useState(null); 
+  const [userVote, setUserVote] = useState(null);
 
   const handleVote = async (type) => {
     if (!exerciseId) {
       console.error("Exercise ID is missing!");
       return;
     }
-  
+
     if (userVote) {
       console.warn("You have already voted on this exercise.");
-      return; 
+      return;
     }
-  
+
     const voteType = type === "up" ? "upvote" : "downvote";
-  
+
     try {
       const response = await voteExercise({ exerciseId, voteType });
-  
+
       if (response && response.newScore !== undefined) {
         setVotes(response.newScore);
         setUserVote(type);

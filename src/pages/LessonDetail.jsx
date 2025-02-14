@@ -1,28 +1,21 @@
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useContext, useState } from "react";
-import { getLessonById, flagLesson } from "../api/lessonApi";
 import {
   Typography,
   Stack,
   Button,
   Box,
-  Card,
-  CardContent,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  TextField,
-  CircularProgress,
-  Alert,
   IconButton,
 } from "@mui/material";
+import FlagIcon from "@mui/icons-material/Flag";
+import { getLessonById, flagLesson } from "../api/lessonApi";
 import { submitLessonProgress as submitAnswers } from "../api/progressApi";
 import LessonResult from "../components/LessonResult";
-import FlagIcon from "@mui/icons-material/Flag";
-import VoteWidget from "../components/VoteWidget";
 import { useLessons } from "../context/LessonsContext";
 import { useDashboard } from '../context/DashboardContext';
-
+import LoadingIndicator from "../components/LoadingIndicator";
+import ErrorMessage from "../components/ErrorMessage";
+import ExercisesList from "../components/ExercisesList";
 const LessonDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -32,7 +25,7 @@ const LessonDetail = () => {
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState({});
   const [showResult, setShowResult] = useState(false);
-  const {refreshLessons } = useLessons();
+  const { refreshLessons } = useLessons();
   const { refreshDashboard } = useDashboard();
 
   useEffect(() => {
@@ -67,7 +60,6 @@ const LessonDetail = () => {
       setResult(result);
       await refreshLessons();
       await refreshDashboard();
-
     } catch (error) {
       alert("Failed to submit progress. Try again.");
     }
@@ -82,104 +74,18 @@ const LessonDetail = () => {
       alert("Failed to flag lesson. Try again.");
     }
   };
-
-  if (loading)
-    return (
-      <Box display="flex" justifyContent="center" mt={5}>
-        <CircularProgress />
-      </Box>
-    );
-
-  if (error)
-    return (
-      <Box textAlign="center" mt={5}>
-        <Alert severity="error">{error}</Alert>
-      </Box>
-    );
-
+  if (loading) {
+    return <LoadingIndicator />;
+  }
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", width: "100%", p: 1 }}>
       <Stack spacing={2} sx={{ mb: 4 }}>
-        <Typography variant="h5" textAlign="center">
-          {lesson.title}
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
-          <Typography
-            color="text.secondary"
-            sx={{ flexGrow: 1, textAlign: "center" }}
-          >
-            Difficulty: {lesson.difficulty}
-          </Typography>
-          <IconButton onClick={handleFlagLesson} size="small" sx={{ ml: 2 }}>
-            <FlagIcon />
-          </IconButton>
-        </Box>
-
-        <Typography variant="h6">Exercises</Typography>
-
-        {lesson.exercises.map((exercise) => (
-          <Card key={exercise.id} sx={{ my: 0 }}>
-            <CardContent>
-              <Typography gutterBottom color="text.secondary" fontSize={14}>
-                {exercise.question}
-              </Typography>
-
-              {exercise.type === "multiple_choice" ? (
-                <RadioGroup
-                  aria-labelledby="exercise-radio-group"
-                  name={`exercise-${exercise.id}`}
-                  onChange={(e) =>
-                    handleAnswerChange(exercise.id, e.target.value)
-                  }
-                >
-                  {JSON.parse(exercise.options).map((option, index) => (
-                    <FormControlLabel
-                      key={index}
-                      control={<Radio />}
-                      value={option}
-                      label={option}
-                    />
-                  ))}
-                </RadioGroup>
-              ) : (
-                <TextField
-                  sx={{ my: 1 }}
-                  type="text"
-                  placeholder="Your answer"
-                  fullWidth
-                  onChange={(e) =>
-                    handleAnswerChange(exercise.id, e.target.value)
-                  }
-                  variant="outlined"
-                />
-              )}
-
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  width: "100%",
-                }}
-              >
-                <VoteWidget exerciseId={exercise.id} score={exercise.score} />
-              </Box>
-            </CardContent>
-          </Card>
-        ))}
-
-        <Box display="flex" justifyContent="center">
-          <Button variant="contained" onClick={handleSubmit}>
-            Submit Answers
-          </Button>
-        </Box>
-
+        <LessonHeader lesson={lesson} onFlagLesson={handleFlagLesson} />
+        <ExercisesList lesson={lesson} onAnswerChange={handleAnswerChange} />
+        <SubmitButton onClick={handleSubmit} />
         <LessonResult
           result={result}
           open={showResult}
@@ -189,5 +95,29 @@ const LessonDetail = () => {
     </Box>
   );
 };
+
+const LessonHeader = ({ lesson, onFlagLesson }) => (
+  <>
+    <Typography variant="h5" textAlign="center">
+      {lesson.title}
+    </Typography>
+    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+      <Typography color="text.secondary" sx={{ flexGrow: 1, textAlign: "center" }}>
+        Difficulty: {lesson.difficulty}
+      </Typography>
+      <IconButton onClick={onFlagLesson} size="small" sx={{ ml: 2 }}>
+        <FlagIcon />
+      </IconButton>
+    </Box>
+  </>
+);
+
+const SubmitButton = ({ onClick }) => (
+  <Box display="flex" justifyContent="center">
+    <Button variant="contained" onClick={onClick}>
+      Submit Answers
+    </Button>
+  </Box>
+);
 
 export default LessonDetail;

@@ -5,7 +5,6 @@ import {
   Button,
   Typography,
   Stack,
-  CircularProgress,
 } from "@mui/material";
 import ProfileEditDrawer from "../components/ProfileEditDrawer";
 import NotificationSettings from "../components/NotificationSettings";
@@ -15,6 +14,8 @@ import PersonalInfoCard from "../components/PersonalInfoCard";
 import LearningGoalsCard from "../components/LearningGoalsCard";
 import { useDashboard } from "../context/DashboardContext";
 import { usePreferences } from "../context/PreferencesContext";
+import LoadingIndicator from "../components/LoadingIndicator";
+import ErrorMessage from "../components/ErrorMessage";
 
 const Profile = () => {
   const {
@@ -65,23 +66,11 @@ const Profile = () => {
   };
 
   if (dashboardLoading || preferencesLoading) {
-    return (
-      <Box display="flex" justifyContent="center" mt={5}>
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingIndicator />;
   }
 
   if (dashboardError || preferencesError) {
-    return (
-      <Typography
-        textAlign="center"
-        color="error"
-        sx={{ width: "100%", mt: 4 }}
-      >
-        {dashboardError + preferencesError}
-      </Typography>
-    );
+    return <ErrorMessage error={dashboardError + preferencesError} />;
   }
 
   return (

@@ -9,10 +9,10 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
-  CircularProgress,
-  Alert,
 } from "@mui/material";
 import { useRanking } from "../context/RankingContext";
+import LoadingIndicator from "../components/LoadingIndicator";
+import ErrorMessage from "../components/ErrorMessage";
 
 const UserRankingScreen = () => {
   const [timeFrame, setTimeFrame] = useState(0);
@@ -21,21 +21,12 @@ const UserRankingScreen = () => {
   const handleChange = (event, newValue) => {
     setTimeFrame(newValue);
   };
-
   if (loading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingIndicator />;
   }
 
   if (error) {
-    return (
-      <Box sx={{ p: 2 }}>
-        <Alert severity="error">{error}</Alert>
-      </Box>
-    );
+    return <ErrorMessage error={error} />;
   }
 
   return (

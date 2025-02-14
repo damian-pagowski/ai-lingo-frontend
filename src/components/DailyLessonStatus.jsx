@@ -4,17 +4,19 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Gauge } from "@mui/x-charts/Gauge";
-import { useEffect } from "react";
+import { useDashboard } from "../context/DashboardContext";
+import LoadingIndicator from "./LoadingIndicator";
+import ErrorMessage from "./ErrorMessage";
 
-const DailyLessonStatus = ({ daily_lesson_commitment, completedLessonsCount }) => {
+const DailyLessonStatus = () => {
   const navigate = useNavigate();
-   
-
-  useEffect(() => {
-    console.log("daily_lesson_commitment: " + daily_lesson_commitment);
-    console.log("completedLessonsCount: " + completedLessonsCount);
-  }, []);
-  
+  const {user, error, loading} = useDashboard()
+  if (loading) {
+    return <LoadingIndicator />;
+  }
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
   return (
     <Card sx={{ p: 1, mt: 2, mb:1, textAlign: "center" }}>
       <CardContent sx={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
@@ -23,13 +25,13 @@ const DailyLessonStatus = ({ daily_lesson_commitment, completedLessonsCount }) =
         </Typography>
 
         <Typography variant="body1">
-          {completedLessonsCount} / {daily_lesson_commitment} lessons
+          {user.completedLessonsCount} / {user.daily_lesson_commitment} lessons
           completed
         </Typography>
 
         <Gauge
           width={100}
-          value={ Math.ceil(completedLessonsCount/ daily_lesson_commitment * 100)}
+          value={ Math.ceil(user.completedLessonsCount/ user.daily_lesson_commitment * 100)}
           height={100}
         />
 

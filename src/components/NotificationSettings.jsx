@@ -8,7 +8,6 @@ import {
   Switch,
   Select,
   MenuItem,
-  Button,
   Box,
 } from "@mui/material";
 
@@ -28,10 +27,6 @@ const NotificationSettings = () => {
 
   const handleTimeChange = (event) => {
     setNotifications({ ...notifications, time: event.target.value });
-  };
-
-  const handleSave = () => {
-    console.log("Notification Settings Saved:", notifications);
   };
 
   return (
@@ -79,13 +74,6 @@ const NotificationSettings = () => {
             </Select>
           </Box>
         )}
-        <Button
-          variant="outlined"
-          sx={{ my: 2, width: "100%" }}
-          onClick={handleSave}
-        >
-          Save Notifications
-        </Button>
       </CardContent>
     </Card>
   );

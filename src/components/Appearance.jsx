@@ -10,7 +10,6 @@ import {
 
 const Appearance = () => {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
-
   const handleToggle = () => {
     setDarkMode((prev) => !prev);
   };

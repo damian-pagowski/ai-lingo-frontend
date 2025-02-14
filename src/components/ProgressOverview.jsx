@@ -1,24 +1,36 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import BorderLinearProgress from "@mui/material/LinearProgress";
+import LinearProgress from "@mui/material/LinearProgress";
+import Box from "@mui/material/Box";
+import { useDashboard } from "../context/DashboardContext";
+import LoadingIndicator from "../components/LoadingIndicator";
+import ErrorMessage from "../components/ErrorMessage";
 
-const ProgressOverview = ({ progress }) => {
-  if (!progress) return null;
+const ProgressOverview = () => {
+  const { progress, loading, error } = useDashboard();
+
+  if (loading) {
+    return <LoadingIndicator />;
+  }
+
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
 
   return (
     <Card sx={{ my: 1 }}>
-      <CardContent >
+      <CardContent>
         <Typography variant="h6" gutterBottom sx={{ textAlign: "center" }}>
-        Overall Progress
+          Overall Progress
         </Typography>
 
         <Typography variant="body1" sx={{ mb: 2, textAlign: "center" }}>
-           Score: {progress.overallScore}%
+          Score: {progress.overallScore}%
         </Typography>
 
         {Object.entries(progress.topicScores).map(([topic, data]) => (
-          <div key={topic} style={{ marginBottom: "16px" }}>
+          <Box key={topic} sx={{ mb: 2 }}>
             <Typography
               variant="subtitle1"
               sx={{ textTransform: "capitalize" }}
@@ -28,15 +40,16 @@ const ProgressOverview = ({ progress }) => {
             <Typography variant="body2" color="text.secondary">
               Score: {data.score} / {data.maxScore} ({data.percentage}%)
             </Typography>
-            <BorderLinearProgress
+            <LinearProgress
               variant="determinate"
               value={Math.min(data.percentage, 100)}
               sx={{ height: 8, borderRadius: 4, mt: 1 }}
             />
-          </div>
+          </Box>
         ))}
       </CardContent>
     </Card>
   );
 };
+
 export default ProgressOverview;

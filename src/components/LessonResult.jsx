@@ -19,7 +19,6 @@ const LessonResult = ({ result, open, onClose }) => {
     onClose();
     navigate("/lessons");
   };
-  console.log(JSON.stringify(result));
   if (!(result && result.topicProgress)) {
     return;
   }
