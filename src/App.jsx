@@ -15,7 +15,7 @@ import { Box } from "@mui/material";
 import UserRankingScreen from "./pages/Ranking";
 import { RankingProvider } from "./context/RankingContext";
 import { PreferencesProvider } from "./context/PreferencesContext";
-
+import WordArrangement from "./pages/WordArrangement";
 const App = () => {
   return (
     <DashboardProvider>
@@ -91,6 +91,10 @@ const App = () => {
                 />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/q1" element={<WordArrangement />} />
+
+
+                
               </Routes>
               <BottomNavigation />
             </Box>
