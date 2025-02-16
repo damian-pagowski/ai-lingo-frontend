@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Box,
   Button,
@@ -10,54 +10,61 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import { getExerciseById } from "../api/exerciseApi";
 
 const WordArrangement = () => {
-  const words = [
-    "to",
-    "passport",
-    "July",
-    "boots",
-    "bright",
-    "Does",
-    "isn't",
-    "in",
-    "my",
-    "sense",
-    "it",
-    "pack",
-    "suitcase",
-    "make",
-    "the",
-  ];
-
   const [selectedWords, setSelectedWords] = useState([]);
-  const [remainingWords, setRemainingWords] = useState(words);
+  const [question, setQuestion] = useState(null);
+  const [expected, setExpected] = useState([]);
+  const [remainingWords, setRemainingWords] = useState([]);
+  const [borderColor, setBorderColor] = useState("grey.400");
 
-  const handleWordClick = (word) => {
-    if (selectedWords.includes(word)) {
-      setSelectedWords(selectedWords.filter((w) => w !== word));
-      setRemainingWords([...remainingWords, word]);
-    } else {
-      setSelectedWords([...selectedWords, word]);
-      setRemainingWords(remainingWords.filter((w) => w !== word));
-    }
-  };
+  useEffect(() => {
+    const fetchExercise = async () => {
+      try {
+        const exercise = await getExerciseById(97);
+        setExpected(JSON.parse(exercise.correct_answer));
+        setRemainingWords(JSON.parse(exercise.options));
+        setQuestion(exercise.question);
+      } catch (err) {
+        console.error("Failed to fetch exercise:", err);
+      }
+    };
+
+    fetchExercise();
+  }, []);
+
+  const answerCheckHandler = useCallback(() => {
+    const isCorrect =
+      selectedWords.length === expected.length &&
+      selectedWords.every((word, index) => word === expected[index]);
+
+    setBorderColor(isCorrect ? "success.main" : "error.main");
+  }, [selectedWords, expected]);
+
+  const handleWordClick = useCallback(
+    (word) => {
+      if (selectedWords.includes(word)) {
+        setSelectedWords((prev) => prev.filter((w) => w !== word));
+        setRemainingWords((prev) => [...prev, word]);
+      } else {
+        setSelectedWords((prev) => [...prev, word]);
+        setRemainingWords((prev) => prev.filter((w) => w !== word));
+      }
+    },
+    [selectedWords]
+  );
 
   return (
-    <Box
-      sx={{ p: 3, maxWidth: 500, mx: "auto", bgcolor: "background.default" }}
-    >
+    <Box sx={{ p: 3, maxWidth: 500, mx: "auto", bgcolor: "background.default" }}>
       <Typography variant="h6" gutterBottom>
         Translate this sentence
       </Typography>
 
       <Stack direction="row" alignItems="center" spacing={1}>
         <VolumeUpIcon color="primary" />
-
         <MessageBubble>
-          <Typography variant="body1">
-            Macht es Sinn, meinen Pass in den Koffer zu packen?
-          </Typography>
+          <Typography variant="body1">{question}</Typography>
         </MessageBubble>
       </Stack>
 
@@ -69,38 +76,24 @@ const WordArrangement = () => {
           display: "flex",
           flexWrap: "wrap",
           gap: 1,
-          border: "1px solid",
-          borderColor: "grey.400",
+          border: "2px solid",
+          borderColor: borderColor,
           borderRadius: 1,
+          transition: "border-color 0.3s ease",
         }}
       >
         {selectedWords.map((word, index) => (
-          <Chip
-            key={index}
-            label={word}
-            onClick={() => handleWordClick(word)}
-            sx={{ cursor: "pointer" }}
-          />
+          <Chip key={index} label={word} onClick={() => handleWordClick(word)} sx={{ cursor: "pointer" }} />
         ))}
       </Paper>
 
       <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
         {remainingWords.map((word, index) => (
-          <Chip
-            key={index}
-            label={word}
-            onClick={() => handleWordClick(word)}
-            sx={{ cursor: "pointer" }}
-          />
+          <Chip key={index} label={word} onClick={() => handleWordClick(word)} sx={{ cursor: "pointer" }} />
         ))}
       </Box>
 
-      <Button
-        variant="contained"
-        fullWidth
-        sx={{ mt: 3 }}
-        disabled={selectedWords.length === 0}
-      >
+      <Button variant="contained" fullWidth sx={{ mt: 3 }} onClick={answerCheckHandler}>
         CHECK
       </Button>
     </Box>
