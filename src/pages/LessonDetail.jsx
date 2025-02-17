@@ -6,8 +6,9 @@ import {
   Button,
   Box,
   IconButton,
+  LinearProgress,
 } from "@mui/material";
-import FlagIcon from "@mui/icons-material/Flag";
+import CloseIcon from '@mui/icons-material/Close';
 import { getLessonById, flagLesson } from "../api/lessonApi";
 import { submitLessonProgress as submitAnswers } from "../api/progressApi";
 import LessonResult from "../components/LessonResult";
@@ -97,19 +98,10 @@ const LessonDetail = () => {
 };
 
 const LessonHeader = ({ lesson, onFlagLesson }) => (
-  <>
-    <Typography variant="h5" textAlign="center">
-      {lesson.title}
-    </Typography>
-    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-      <Typography color="text.secondary" sx={{ flexGrow: 1, textAlign: "center" }}>
-        Difficulty: {lesson.difficulty}
-      </Typography>
-      <IconButton onClick={onFlagLesson} size="small" sx={{ ml: 2 }}>
-        <FlagIcon />
-      </IconButton>
-    </Box>
-  </>
+  <Box display="flex" alignItems="center" gap={2}>
+  <CloseIcon />
+  <LinearProgress variant="determinate" value={20} sx={{ flexGrow: 1 }} />
+</Box>
 );
 
 const SubmitButton = ({ onClick }) => (

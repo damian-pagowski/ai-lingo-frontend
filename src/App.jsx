@@ -15,7 +15,11 @@ import { Box } from "@mui/material";
 import UserRankingScreen from "./pages/Ranking";
 import { RankingProvider } from "./context/RankingContext";
 import { PreferencesProvider } from "./context/PreferencesContext";
-import WordArrangement from "./pages/WordArrangement";
+import WordArrangement from "./components/exercises/WordArrangement";
+import MatchingPairs from "./components/exercises/MatchingPairs"
+import MultipleChoice from "./components/exercises/MultipleChoice";
+import FillInTheBlank from "./components/exercises/FillInTheBlank";
+
 const App = () => {
   return (
     <DashboardProvider>
@@ -92,9 +96,9 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/q1" element={<WordArrangement />} />
-
-
-                
+                <Route path="/q2" element={<MatchingPairs />} />
+                <Route path="/q3" element={<MultipleChoice />} />
+                <Route path="/q4" element={<FillInTheBlank />} />
               </Routes>
               <BottomNavigation />
             </Box>

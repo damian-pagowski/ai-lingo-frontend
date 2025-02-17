@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
-import { getExerciseById } from "../api/exerciseApi";
+import { getExerciseById } from "../../api/exerciseApi";
 
 const WordArrangement = () => {
   const [selectedWords, setSelectedWords] = useState([]);
