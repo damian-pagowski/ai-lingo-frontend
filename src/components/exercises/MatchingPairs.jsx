@@ -1,39 +1,19 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Grid2, Paper, Typography } from "@mui/material";
-import LoadingIndicator from "../LoadingIndicator";
-import ErrorMessage from "../ErrorMessage";
-import { getExerciseById } from "../../api/exerciseApi";
+import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 
-const MatchingPairs = ({ exercise }) => {
+const MatchingPairs = ({ data, handleResult }) => {
   const [selectedLeft, setSelectedLeft] = useState(null);
   const [selectedRight, setSelectedRight] = useState(null);
   const [matchedPairs, setMatchedPairs] = useState([]);
   const [wrongAttempt, setWrongAttempt] = useState([]);
   const [question, setQuestion] = useState([]);
   const [solution, setSolution] = useState([]);
-  // TODO remove later
-  const [loading, setLoading] = useState(null);
-  const [error, setError] = useState(null);
+  const [hideButton, setHideButton] = useState(false);
 
-
-  // TODO replace with passed props
   useEffect(() => {
-    const fetchExercise = async () => {
-      try {
-        setLoading(true);
-        const exercise = await getExerciseById(98);
-        setSolution(JSON.parse(exercise.correct_answer));
-        setQuestion(JSON.parse(exercise.options));
-      } catch (err) {
-        console.error("Failed to fetch exercise:", err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchExercise();
-  }, []);
+    setSolution(JSON.parse(data.correct_answer));
+    setQuestion(JSON.parse(data.options));
+  }, [data]);
 
   const handleSelect = (word, column) => {
     setWrongAttempt([]);
@@ -49,11 +29,11 @@ const MatchingPairs = ({ exercise }) => {
         );
 
         if (correctMatch) {
-          setMatchedPairs([...matchedPairs, selectedLeft]);
+          setMatchedPairs([...matchedPairs, { left: selectedLeft, right: word }]);
           setSelectedLeft(null);
           setSelectedRight(null);
         } else {
-          setWrongAttempt([selectedLeft, word]); 
+          setWrongAttempt([selectedLeft, word]);
           setSelectedLeft(null);
           setSelectedRight(null);
         }
@@ -61,25 +41,30 @@ const MatchingPairs = ({ exercise }) => {
     }
   };
 
+  const checkIfSolved = () => {
+    return (
+      matchedPairs.length === solution.length &&
+      matchedPairs.every(({ left, right }) =>
+        solution.some((pair) => pair.left === left && pair.right === right)
+      )
+    );
+  };
 
-  // TODO remove later
-  if (loading) {
-    return <LoadingIndicator />;
-  }
-
-  if (error) {
-    return <ErrorMessage error={error} />;
-  }
+  const submitHandler = () => {
+    const isCorrect = checkIfSolved();
+    setHideButton(true);
+    handleResult(data.id, isCorrect);
+  };
 
   return (
-    <Box sx={{ mx: "auto", mt: 4, textAlign: "center" }}>
+    <Box sx={{ mx: 0, my: 3, textAlign: "center", p: 0 }}>
       <Typography variant="h6" gutterBottom>
         Tap the matching pairs
       </Typography>
 
-      <Grid2 container spacing={2}>
+      <Grid container spacing={2}>
         {/* Left Column */}
-        <Grid2 item xs={6}>
+        <Grid item xs={6}>
           {question.map(({ left }) => (
             <Paper
               key={left}
@@ -87,60 +72,63 @@ const MatchingPairs = ({ exercise }) => {
               sx={{
                 p: 2,
                 mb: 1,
-                cursor: matchedPairs.includes(left) ? "default" : "pointer",
+                cursor: matchedPairs.some((pair) => pair.left === left) ? "default" : "pointer",
                 textAlign: "center",
-                bgcolor: matchedPairs.includes(left) ? "lightgreen" : "inherit",
-                border: matchedPairs.includes(left)
+                bgcolor: matchedPairs.some((pair) => pair.left === left) ? "lightgreen" : "inherit",
+                border: matchedPairs.some((pair) => pair.left === left)
                   ? "2px solid green"
                   : wrongAttempt.includes(left)
                   ? "2px solid red"
                   : selectedLeft === left
                   ? "2px solid blue"
                   : "1px solid gray",
-                pointerEvents: matchedPairs.includes(left) ? "none" : "auto",
+                pointerEvents: matchedPairs.some((pair) => pair.left === left) ? "none" : "auto",
               }}
             >
               {left}
             </Paper>
           ))}
-        </Grid2>
+        </Grid>
 
         {/* Right Column */}
-        <Grid2 item xs={6}>
-          {question.map(({ right, left }) => (
+        <Grid item xs={6}>
+          {question.map(({ right }) => (
             <Paper
               key={right}
               onClick={() => handleSelect(right, "right")}
               sx={{
                 p: 2,
                 mb: 1,
-                cursor: matchedPairs.includes(left) ? "default" : "pointer",
+                cursor: matchedPairs.some((pair) => pair.right === right) ? "default" : "pointer",
                 textAlign: "center",
-                bgcolor: matchedPairs.includes(left) ? "lightgreen" : "inherit",
-                border: matchedPairs.includes(left)
+                bgcolor: matchedPairs.some((pair) => pair.right === right) ? "lightgreen" : "inherit",
+                border: matchedPairs.some((pair) => pair.right === right)
                   ? "2px solid green"
                   : wrongAttempt.includes(right)
                   ? "2px solid red"
                   : selectedRight === right
                   ? "2px solid blue"
                   : "1px solid gray",
-                pointerEvents: matchedPairs.includes(left) ? "none" : "auto",
+                pointerEvents: matchedPairs.some((pair) => pair.right === right) ? "none" : "auto",
               }}
             >
               {right}
             </Paper>
           ))}
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
 
-      <Button
-        variant="contained"
-        fullWidth
-        sx={{ mt: 2 }}
-        disabled={matchedPairs.length !== question.length}
-      >
-        CONTINUE
-      </Button>
+      {!hideButton && (
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{ mt: 3 }}
+          disabled={matchedPairs.length !== solution.length}
+          onClick={submitHandler}
+        >
+          CHECK
+        </Button>
+      )}
     </Box>
   );
 };

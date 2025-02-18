@@ -1,35 +1,17 @@
-import ExerciseContent from "./ExerciseContent";
-import {Card , Box}from "@mui/material";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import VoteWidget from "./VoteWidget";
+import MultipleChoice from "../components/exercises/MultipleChoice";
+import FillInTheBlank from "../components/exercises/FillInTheBlank";
+import MatchingPairs from "../components/exercises/MatchingPairs";
+import WordArrangement from "../components/exercises/WordArrangement";
+import { Box } from "@mui/material";
 
-const ExercisesList = ({ lesson, onAnswerChange }) => (
-  <>
-    <Typography variant="h6">Exercises</Typography>
-    {lesson.exercises.map((exercise) => (
-      <Card key={exercise.id} sx={{ my: 0 }}>
-        <CardContent>
-          <Typography gutterBottom color="text.secondary" fontSize={14}>
-            {exercise.question}
-          </Typography>
-          <ExerciseContent
-            exercise={exercise}
-            onAnswerChange={onAnswerChange}
-          />
-          <Box
-            sx={{ display: "flex", justifyContent: "flex-end", width: "100%" }}
-          >
-            <VoteWidget
-              exerciseId={exercise.id}
-              score={exercise.score}
-              sx={{ width: "auto" }}
-            />
-          </Box>
-        </CardContent>
-      </Card>
-    ))}
-  </>
+const ExercisesList = ({ data, handleResult }) => (
+  <Box sx={{p:0, m:0}}>
+    {JSON.stringify(data)}
+    {/* {data.type == "multiple_choice" && <MultipleChoice data handleResult />}
+    {data.type == "fill_in_the_blank" && <FillInTheBlank data handleResult />}
+    {data.type == "word_arrangement" && <WordArrangement data handleResult />}
+    {data.type == "match_pairs" && <MatchingPairs data handleResult />} */}
+    </Box>
 );
 
 export default ExercisesList;

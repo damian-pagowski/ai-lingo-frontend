@@ -1,65 +1,87 @@
-import * as React from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
+  Box,
   Typography,
-  List,
-  ListItem,
+  Button,
+  Grid2,
+  Card,
+  // List,
+  // ListItem,
+  CardContent,
 } from "@mui/material";
-import { Gauge } from "@mui/x-charts/Gauge";
+// import BoltIcon from "@mui/icons-material/Bolt";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+// import ShareIcon from "@mui/icons-material/Share";
 
-const LessonResult = ({ result, open, onClose }) => {
-  const navigate = useNavigate();
-
-  const handleConfirm = () => {
-    onClose();
-    navigate("/lessons");
+const LessonResult = ({ result }) => {
+  result = {
+    lessonId: 1,
+    score: 50,
+    totalQuestions: 10,
+    correctAnswers: 5,
+    topicProgress: {
+      work: 20,
+      travel: 10,
+      general: 20,
+    },
   };
-  if (!(result && result.topicProgress)) {
-    return;
-  }
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      aria-labelledby="lesson-result-title"
-      aria-describedby="lesson-result-description"
+    <Box
+      sx={{
+        textAlign: "center",
+        p: 3,
+        bgcolor: "background.default",
+        color: "text.primary",
+      }}
     >
-      <DialogTitle id="lesson-result-title">Lesson Completed!</DialogTitle>
-      <DialogContent>
-        <Typography variant="h6" gutterBottom>
-          Your Score: {result.score}%
-        </Typography>
+      <Typography variant="h4" sx={{ fontWeight: "bold", color: "#FFC107" }}>
+        High scorer!
+      </Typography>
+      <Typography variant="subtitle1" sx={{ mt: 1, mb: 3 }}>
+        You earned {result.score} Scores
+      </Typography>
 
-        <Gauge
-          width={100}
-          value={result.correctAnswers / result.totalQuestions * 100}
-          height={100}
-        />
-        <Typography variant="h6" sx={{ mt: 2 }}>
-          Topic Progress:
-        </Typography>
-        <List>
-          {Object.entries(result.topicProgress).map(([topic, score]) => (
-            <ListItem key={topic}>
-              <Typography>
-                - {topic.replace("_", " ")}: {score}%
-              </Typography>
-            </ListItem>
-          ))}
-        </List>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleConfirm} autoFocus>
-          Continue
+      <Grid2 container spacing={2} justifyContent="center">
+        {/* XP Card */}
+
+        {/*  */}
+        {Object.entries(result.topicProgress).map(([topic, score]) => (
+          <Grid2 key={topic}>
+            <Card
+              sx={{
+                bgcolor: "#4CAF50",
+                color: "#fff",
+                minWidth: 120,
+                borderRadius: 2,
+              }}
+            >
+              <CardContent>
+                <Typography variant="caption" sx={{ fontWeight: "bold" }}>
+                  {topic.replace("_", " ")}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CheckCircleIcon sx={{ mr: 1 }} /> {score}%
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid2>
+        ))}
+      </Grid2>
+
+      <Box sx={{ mt: 4, mx: "auto" }}>
+        <Button sx={{ mx: "auto", mb: 2 }} variant="outlined">
+          OK
         </Button>
-      </DialogActions>
-    </Dialog>
+      </Box>
+    </Box>
   );
 };
 

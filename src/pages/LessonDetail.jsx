@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-  Typography,
-  Stack,
   Button,
   Box,
   IconButton,
   LinearProgress,
 } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import { getLessonById, flagLesson } from "../api/lessonApi";
-import { submitLessonProgress as submitAnswers } from "../api/progressApi";
-import LessonResult from "../components/LessonResult";
 import { useLessons } from "../context/LessonsContext";
-import { useDashboard } from '../context/DashboardContext';
+import { useDashboard } from "../context/DashboardContext";
 import LoadingIndicator from "../components/LoadingIndicator";
 import ErrorMessage from "../components/ErrorMessage";
-import ExercisesList from "../components/ExercisesList";
+import MultipleChoice from "../components/exercises/MultipleChoice";
+import FillInTheBlank from "../components/exercises/FillInTheBlank";
+import MatchingPairs from "../components/exercises/MatchingPairs";
+import WordArrangement from "../components/exercises/WordArrangement";
+
 const LessonDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -24,22 +24,20 @@ const LessonDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [answers, setAnswers] = useState({});
-  const [result, setResult] = useState({});
-  const [showResult, setShowResult] = useState(false);
   const { refreshLessons } = useLessons();
   const { refreshDashboard } = useDashboard();
 
-  useEffect(() => {
-    if (result?.results) {
-      setShowResult(true);
-    }
-  }, [result]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentExercise, setCurrentExercise] = useState(null);
 
   useEffect(() => {
     const fetchLesson = async () => {
       try {
+        setLoading(true);
         const data = await getLessonById(id);
         setLesson(data);
+        setCurrentIndex(0);
+        setCurrentExercise(data.exercises[0]);
       } catch (err) {
         console.error("Error fetching lesson:", err);
         setError("Failed to load lesson");
@@ -51,64 +49,76 @@ const LessonDetail = () => {
     fetchLesson();
   }, [id]);
 
-  const handleAnswerChange = (exerciseId, value) => {
-    setAnswers((prev) => ({ ...prev, [exerciseId]: value }));
-  };
+  useEffect(() => {
+    if (lesson && lesson.exercises) {
+      setCurrentExercise(lesson.exercises[currentIndex]);
+    }
+  }, [currentIndex, lesson]);
 
   const handleSubmit = async () => {
-    try {
-      const result = await submitAnswers(lesson.id, answers);
-      setResult(result);
-      await refreshLessons();
-      await refreshDashboard();
-    } catch (error) {
-      alert("Failed to submit progress. Try again.");
+    console.log(JSON.stringify(answers));
+    // TODO implement
+    // send results to api
+    // navigate page with results       
+  };
+
+  if (loading) return <LoadingIndicator />;
+  if (error) return <ErrorMessage error={error} />;
+
+  const exerciseResultHandler = (exerciseId, result) => {
+
+    console.log("EXERCISE: " + exerciseId + " : " + result)
+    setAnswers((prev) => ({ ...prev, [exerciseId]: result }));
+    console.log("Answers: ", JSON.stringify(answers));
+  };
+
+  const handleNext = () => {
+    if (currentIndex < lesson.exercises.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
     }
   };
 
-  const handleFlagLesson = async () => {
-    try {
-      await flagLesson(id);
-      navigate("/lessons");
-    } catch (error) {
-      console.error("Failed to flag lesson:", error);
-      alert("Failed to flag lesson. Try again.");
-    }
-  };
-  if (loading) {
-    return <LoadingIndicator />;
-  }
-  if (error) {
-    return <ErrorMessage error={error} />;
-  }
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", width: "100%", p: 1 }}>
-      <Stack spacing={2} sx={{ mb: 4 }}>
-        <LessonHeader lesson={lesson} onFlagLesson={handleFlagLesson} />
-        <ExercisesList lesson={lesson} onAnswerChange={handleAnswerChange} />
-        <SubmitButton onClick={handleSubmit} />
-        <LessonResult
-          result={result}
-          open={showResult}
-          onClose={() => setShowResult(false)}
-        />
-      </Stack>
+    <Box sx={{ maxWidth: 600, mx: "auto", p: 3 }}>
+      <LessonHeader current={currentIndex +1} total={lesson.exercises.length} />
+      {currentExercise && (
+        <>
+          {currentExercise.type === "multiple_choice" && (
+            <MultipleChoice data={currentExercise} handleResult={exerciseResultHandler} />
+          )}
+          {currentExercise.type === "fill_in_the_blank" && (
+            <FillInTheBlank data={currentExercise} handleResult={exerciseResultHandler} />
+          )}
+          {currentExercise.type === "word_arrangement" && (
+            <WordArrangement data={currentExercise} handleResult={exerciseResultHandler} />
+          )}
+          {currentExercise.type === "match_pairs" && (
+            <MatchingPairs data={currentExercise} handleResult={exerciseResultHandler} />
+          )}
+        </>
+      )}
+
+      <Box sx={{ display: "flex", mt: 3 }}>
+        {currentIndex < lesson.exercises.length - 1 ? (
+          <Button variant="contained" onClick={handleNext} sx={{ flex: 1 }}>
+            NEXT
+          </Button>
+        ) : (
+          <Button variant="contained" color="success" onClick={handleSubmit} sx={{ flex: 1 }}>
+            SUBMIT
+          </Button>
+        )}
+      </Box>
     </Box>
   );
 };
 
-const LessonHeader = ({ lesson, onFlagLesson }) => (
+const LessonHeader = ({ current, total }) => (
   <Box display="flex" alignItems="center" gap={2}>
-  <CloseIcon />
-  <LinearProgress variant="determinate" value={20} sx={{ flexGrow: 1 }} />
-</Box>
-);
-
-const SubmitButton = ({ onClick }) => (
-  <Box display="flex" justifyContent="center">
-    <Button variant="contained" onClick={onClick}>
-      Submit Answers
-    </Button>
+    <IconButton onClick={() => window.history.back()} sx={{ color: "inherit" }}> 
+      <CloseIcon />
+    </IconButton>
+    <LinearProgress variant="determinate" value={current/total*100} sx={{ flexGrow: 1 }} />
   </Box>
 );
 

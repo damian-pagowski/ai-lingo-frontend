@@ -9,11 +9,8 @@ import {
   Button,
   Paper,
 } from "@mui/material";
-import { getExerciseById } from "../../api/exerciseApi";
-import LoadingIndicator from "../LoadingIndicator";
-import ErrorMessage from "../ErrorMessage";
 
-const MultipleChoice = () => {
+const MultipleChoice = ( {data, handleResult}) => {
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleSelect = (option) => {
@@ -23,56 +20,27 @@ const MultipleChoice = () => {
   const [question, setQuestion] = useState(null);
   const [options, setOptions] = useState([]);
   const [expected, setExpected] = useState(null);
-  // TODO remove later
-  const [loading, setLoading] = useState(null);
-  const [error, setError] = useState(null);
+  const [hideButton, setHideButton] = useState(false);
 
 
   useEffect(() => {
-    const fetchExercise = async () => {
-      try {
-        setLoading(true);
-        const exercise = await getExerciseById(2);
-        setExpected(exercise.correct_answer);
-        setOptions(JSON.parse(exercise.options));
-        setQuestion(exercise.question);
-
-      } catch (err) {
-        console.error("Failed to fetch exercise:", err);
-        setError(err.message)
-      }finally{
-        setLoading(false);
-      }
-    };
-
-    fetchExercise();
-  }, []);
-
-
-
-
-  // TODO remove later
-  if (loading) {
-    return <LoadingIndicator />;
-  }
-
-  if (error) {
-    return <ErrorMessage error={error} />;
-  }
-
+    console.log(JSON.stringify(data))
+    setExpected(data.correct_answer);
+    setOptions(JSON.parse(data.options));
+    setQuestion(data.question);
+  }, [data]);
 
   const checkResult = () => {
-    if (selectedOption === expected) {
-      alert("Correct!");
-    } else {
-      alert("Incorrect!");
-    }
+    const result =  (selectedOption === expected);
+    handleResult(data.id, result)
+    setHideButton(true);
+
   };
 
   return (
     <Box
       sx={{
-        p: 3,
+        py: 3,
         maxWidth: 400,
         mx: "auto",
         bgcolor: "background.default",
@@ -87,7 +55,6 @@ const MultipleChoice = () => {
           {options.map((option, index) => (
             <ListItem
               key={index}
-              button
               onClick={() => handleSelect(option)}
               sx={{
                 display: "flex",
@@ -112,15 +79,17 @@ const MultipleChoice = () => {
         </List>
       </Paper>
 
-      <Button
-        variant="contained"
-        fullWidth
-        sx={{ mt: 3 }}
-        disabled={!selectedOption}
-        onClick={checkResult}
-      >
-        CONTINUE
-      </Button>
+      {!hideButton && (
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{ mt: 3 }}
+          disabled={!selectedOption}
+          onClick={checkResult}
+        >
+          CHECK
+        </Button>
+      )}
     </Box>
   );
 };
