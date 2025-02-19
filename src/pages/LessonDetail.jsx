@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Button,
@@ -7,7 +7,7 @@ import {
   LinearProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { getLessonById, flagLesson } from "../api/lessonApi";
+import { getLessonById } from "../api/lessonApi";
 import { useLessons } from "../context/LessonsContext";
 import { useDashboard } from "../context/DashboardContext";
 import LoadingIndicator from "../components/LoadingIndicator";
@@ -57,19 +57,15 @@ const LessonDetail = () => {
 
   const handleSubmit = async () => {
     console.log(JSON.stringify(answers));
-    // TODO implement
-    // send results to api
-    // navigate page with results       
+    // TODO implement API call
   };
 
   if (loading) return <LoadingIndicator />;
   if (error) return <ErrorMessage error={error} />;
 
   const exerciseResultHandler = (exerciseId, result) => {
-
-    console.log("EXERCISE: " + exerciseId + " : " + result)
+    console.log("EXERCISE: " + exerciseId + " : " + result);
     setAnswers((prev) => ({ ...prev, [exerciseId]: result }));
-    console.log("Answers: ", JSON.stringify(answers));
   };
 
   const handleNext = () => {
@@ -79,26 +75,49 @@ const LessonDetail = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", p: 3 }}>
-      <LessonHeader current={currentIndex +1} total={lesson.exercises.length} />
-      {currentExercise && (
-        <>
-          {currentExercise.type === "multiple_choice" && (
-            <MultipleChoice data={currentExercise} handleResult={exerciseResultHandler} />
-          )}
-          {currentExercise.type === "fill_in_the_blank" && (
-            <FillInTheBlank data={currentExercise} handleResult={exerciseResultHandler} />
-          )}
-          {currentExercise.type === "word_arrangement" && (
-            <WordArrangement data={currentExercise} handleResult={exerciseResultHandler} />
-          )}
-          {currentExercise.type === "match_pairs" && (
-            <MatchingPairs data={currentExercise} handleResult={exerciseResultHandler} />
-          )}
-        </>
-      )}
+    <Box
+      sx={{
+        maxWidth: 600,
+        mx: "auto",
+        height: "90vh",
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+      }}
+    >
+      <LessonHeader current={currentIndex + 1} total={lesson.exercises.length} />
 
-      <Box sx={{ display: "flex", mt: 3 }}>
+      <Box sx={{ flexGrow: 1, overflow: "auto", p: 3 }}>
+        {currentExercise && (
+          <>
+            {currentExercise.type === "multiple_choice" && (
+              <MultipleChoice data={currentExercise} handleResult={exerciseResultHandler} />
+            )}
+            {currentExercise.type === "fill_in_the_blank" && (
+              <FillInTheBlank data={currentExercise} handleResult={exerciseResultHandler} />
+            )}
+            {currentExercise.type === "word_arrangement" && (
+              <WordArrangement data={currentExercise} handleResult={exerciseResultHandler} />
+            )}
+            {currentExercise.type === "match_pairs" && (
+              <MatchingPairs data={currentExercise} handleResult={exerciseResultHandler} />
+            )}
+          </>
+        )}
+      </Box>
+
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: 0,
+          width: "100%",
+          p: 0,
+          bgcolor: "background.default",
+          boxShadow: "0px -2px 5px rgba(0,0,0,0.1)",
+          display: "flex",
+          gap: 1,
+        }}
+      >
         {currentIndex < lesson.exercises.length - 1 ? (
           <Button variant="contained" onClick={handleNext} sx={{ flex: 1 }}>
             NEXT
@@ -114,11 +133,11 @@ const LessonDetail = () => {
 };
 
 const LessonHeader = ({ current, total }) => (
-  <Box display="flex" alignItems="center" gap={2}>
-    <IconButton onClick={() => window.history.back()} sx={{ color: "inherit" }}> 
+  <Box display="flex" alignItems="center" gap={2} p={2}>
+    <IconButton onClick={() => window.history.back()} sx={{ color: "inherit" }}>
       <CloseIcon />
     </IconButton>
-    <LinearProgress variant="determinate" value={current/total*100} sx={{ flexGrow: 1 }} />
+    <LinearProgress variant="determinate" value={(current / total) * 100} sx={{ flexGrow: 1 }} />
   </Box>
 );
 

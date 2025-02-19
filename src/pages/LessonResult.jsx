@@ -3,15 +3,11 @@ import {
   Box,
   Typography,
   Button,
-  Grid2,
+  Grid,
   Card,
-  // List,
-  // ListItem,
   CardContent,
 } from "@mui/material";
-// import BoltIcon from "@mui/icons-material/Bolt";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-// import ShareIcon from "@mui/icons-material/Share";
 
 const LessonResult = ({ result }) => {
   result = {
@@ -29,10 +25,16 @@ const LessonResult = ({ result }) => {
   return (
     <Box
       sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "90vh",
         textAlign: "center",
         p: 3,
         bgcolor: "background.default",
         color: "text.primary",
+        position: "relative",
       }}
     >
       <Typography variant="h4" sx={{ fontWeight: "bold", color: "#FFC107" }}>
@@ -42,12 +44,9 @@ const LessonResult = ({ result }) => {
         You earned {result.score} Scores
       </Typography>
 
-      <Grid2 container spacing={2} justifyContent="center">
-        {/* XP Card */}
-
-        {/*  */}
+      <Grid container spacing={2} justifyContent="center">
         {Object.entries(result.topicProgress).map(([topic, score]) => (
-          <Grid2 key={topic}>
+          <Grid item key={topic}>
             <Card
               sx={{
                 bgcolor: "#4CAF50",
@@ -72,12 +71,12 @@ const LessonResult = ({ result }) => {
                 </Typography>
               </CardContent>
             </Card>
-          </Grid2>
+          </Grid>
         ))}
-      </Grid2>
+      </Grid>
 
-      <Box sx={{ mt: 4, mx: "auto" }}>
-        <Button sx={{ mx: "auto", mb: 2 }} variant="outlined">
+      <Box sx={{ position: "absolute", bottom: 0, width: "100%", p: 2 }}>
+        <Button variant="outlined" fullWidth sx={{ py: 1.5 }}>
           OK
         </Button>
       </Box>

@@ -19,7 +19,7 @@ import WordArrangement from "./components/exercises/WordArrangement";
 import MatchingPairs from "./components/exercises/MatchingPairs"
 import MultipleChoice from "./components/exercises/MultipleChoice";
 import FillInTheBlank from "./components/exercises/FillInTheBlank";
-import LessonResult from "./components/LessonResult";
+import LessonResult from "./pages/LessonResult";
 const App = () => {
   return (
     <DashboardProvider>

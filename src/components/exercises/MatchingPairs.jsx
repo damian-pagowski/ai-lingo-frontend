@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Grid, Paper, Typography } from "@mui/material";
+import { Box, Button, Grid2, Paper, Typography } from "@mui/material";
 
 const MatchingPairs = ({ data, handleResult }) => {
   const [selectedLeft, setSelectedLeft] = useState(null);
@@ -57,23 +57,24 @@ const MatchingPairs = ({ data, handleResult }) => {
   };
 
   return (
-    <Box sx={{ mx: 0, my: 3, textAlign: "center", p: 0 }}>
+    <Box sx={{ width: "100%", height: "100%", textAlign: "center", p: 0, m: 0 }}>
       <Typography variant="h6" gutterBottom>
         Tap the matching pairs
       </Typography>
 
-      <Grid container spacing={2}>
+      <Grid2 container spacing={0} sx={{ width: "100%", boxSizing: "border-box" , m:0, p:0}}>
         {/* Left Column */}
-        <Grid item xs={6}>
+        <Grid2 item xs={6} sx={{ p: 0, m: 0 }}>
           {question.map(({ left }) => (
             <Paper
               key={left}
               onClick={() => handleSelect(left, "left")}
               sx={{
-                p: 2,
+                p: 1,
                 mb: 1,
                 cursor: matchedPairs.some((pair) => pair.left === left) ? "default" : "pointer",
                 textAlign: "center",
+                width: "100%",
                 bgcolor: matchedPairs.some((pair) => pair.left === left) ? "lightgreen" : "inherit",
                 border: matchedPairs.some((pair) => pair.left === left)
                   ? "2px solid green"
@@ -88,19 +89,20 @@ const MatchingPairs = ({ data, handleResult }) => {
               {left}
             </Paper>
           ))}
-        </Grid>
+        </Grid2>
 
         {/* Right Column */}
-        <Grid item xs={6}>
+        <Grid2 item xs={6} sx={{ p: 0, m: 0 }}>
           {question.map(({ right }) => (
             <Paper
               key={right}
               onClick={() => handleSelect(right, "right")}
               sx={{
-                p: 2,
+                p: 1,
                 mb: 1,
                 cursor: matchedPairs.some((pair) => pair.right === right) ? "default" : "pointer",
                 textAlign: "center",
+                width: "100%",
                 bgcolor: matchedPairs.some((pair) => pair.right === right) ? "lightgreen" : "inherit",
                 border: matchedPairs.some((pair) => pair.right === right)
                   ? "2px solid green"
@@ -115,8 +117,8 @@ const MatchingPairs = ({ data, handleResult }) => {
               {right}
             </Paper>
           ))}
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
 
       {!hideButton && (
         <Button
