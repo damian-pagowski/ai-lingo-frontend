@@ -39,10 +39,28 @@ export const createAiLesson = async () => {
   });
 };
 
-
 export const voteExercise = async (data) => {
   return await apiClient(`vote-exercise`, {
     method: "POST",
     body: JSON.stringify(data),
+  });
+};
+
+export const getNextLessonExercise = async (id) => {
+  return await apiClient(`lessons/${id}/exercise`, {
+    method: "GET",
+  });
+};
+
+export const submitExerciseAnswer = async (lessonid, exerciseid, data) => {
+  return await apiClient(`lessons/${lessonid}/exercise/${exerciseid}/answer`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+
+export const getLessonSummary = async (id) => {
+  return await apiClient(`lessons/${id}/summary`, {
+    method: "GET",
   });
 };

@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { Box, Button, Grid2, Paper, Typography } from "@mui/material";
 
-const MatchingPairs = ({ data, handleResult }) => {
+// const MatchingPairs = ({ data, handleResult }) => {
+  const MatchingPairs = ({ data, selectedAnswer, setSelectedAnswer }) => {
+
   const [selectedLeft, setSelectedLeft] = useState(null);
   const [selectedRight, setSelectedRight] = useState(null);
   const [matchedPairs, setMatchedPairs] = useState([]);
   const [wrongAttempt, setWrongAttempt] = useState([]);
   const [question, setQuestion] = useState([]);
   const [solution, setSolution] = useState([]);
-  const [hideButton, setHideButton] = useState(false);
+  // const [hideButton, setHideButton] = useState(false);
 
   useEffect(() => {
     setSolution(JSON.parse(data.correct_answer));
@@ -39,22 +41,23 @@ const MatchingPairs = ({ data, handleResult }) => {
         }
       }
     }
+    setSelectedAnswer(matchedPairs);
   };
 
-  const checkIfSolved = () => {
-    return (
-      matchedPairs.length === solution.length &&
-      matchedPairs.every(({ left, right }) =>
-        solution.some((pair) => pair.left === left && pair.right === right)
-      )
-    );
-  };
+  // const checkIfSolved = () => {
+  //   return (
+  //     matchedPairs.length === solution.length &&
+  //     matchedPairs.every(({ left, right }) =>
+  //       solution.some((pair) => pair.left === left && pair.right === right)
+  //     )
+  //   );
+  // };
 
-  const submitHandler = () => {
-    const isCorrect = checkIfSolved();
-    setHideButton(true);
-    handleResult(data.id, isCorrect);
-  };
+  // const submitHandler = () => {
+  //   const isCorrect = checkIfSolved();
+  //   setHideButton(true);
+  //   handleResult(data.id, isCorrect);
+  // };
 
   return (
     <Box sx={{ width: "100%", height: "100%", textAlign: "center", p: 0, m: 0 }}>
@@ -120,7 +123,7 @@ const MatchingPairs = ({ data, handleResult }) => {
         </Grid2>
       </Grid2>
 
-      {!hideButton && (
+      {/* {!hideButton && (
         <Button
           variant="contained"
           fullWidth
@@ -130,7 +133,7 @@ const MatchingPairs = ({ data, handleResult }) => {
         >
           CHECK
         </Button>
-      )}
+      )} */}
     </Box>
   );
 };

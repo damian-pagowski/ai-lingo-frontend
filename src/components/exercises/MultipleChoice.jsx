@@ -1,41 +1,7 @@
-import { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Radio,
-  Button,
-  Paper,
-} from "@mui/material";
+import { Box, Typography, List, ListItem, ListItemText, Radio, Paper } from "@mui/material";
 
-const MultipleChoice = ( {data, handleResult}) => {
-  const [selectedOption, setSelectedOption] = useState(null);
-
-  const handleSelect = (option) => {
-    setSelectedOption(option);
-  };
-
-  const [question, setQuestion] = useState(null);
-  const [options, setOptions] = useState([]);
-  const [expected, setExpected] = useState(null);
-  const [hideButton, setHideButton] = useState(false);
-
-
-  useEffect(() => {
-    console.log(JSON.stringify(data))
-    setExpected(data.correct_answer);
-    setOptions(JSON.parse(data.options));
-    setQuestion(data.question);
-  }, [data]);
-
-  const checkResult = () => {
-    const result =  (selectedOption === expected);
-    handleResult(data.id, result)
-    setHideButton(true);
-
-  };
+const MultipleChoice = ({ data, selectedAnswer, setSelectedAnswer }) => {
+  const options = JSON.parse(data.options);
 
   return (
     <Box
@@ -47,7 +13,7 @@ const MultipleChoice = ( {data, handleResult}) => {
       }}
     >
       <Typography variant="h6" gutterBottom>
-        {question}
+        {data.question}
       </Typography>
 
       <Paper elevation={0} sx={{ bgcolor: "transparent" }}>
@@ -55,41 +21,24 @@ const MultipleChoice = ( {data, handleResult}) => {
           {options.map((option, index) => (
             <ListItem
               key={index}
-              onClick={() => handleSelect(option)}
+              onClick={() => setSelectedAnswer(option)}
               sx={{
                 display: "flex",
                 alignItems: "center",
                 border: "1px solid",
-                borderColor:
-                  selectedOption === option ? "primary.main" : "grey.600",
+                borderColor: selectedAnswer === option ? "primary.main" : "grey.600",
                 borderRadius: 1,
                 mb: 1,
                 py: 1,
                 px: 2,
               }}
             >
-              <Radio
-                checked={selectedOption === option}
-                onChange={() => handleSelect(option)}
-                color="primary"
-              />
+              <Radio checked={selectedAnswer === option} color="primary" />
               <ListItemText primary={option} />
             </ListItem>
           ))}
         </List>
       </Paper>
-
-      {!hideButton && (
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{ mt: 3 }}
-          disabled={!selectedOption}
-          onClick={checkResult}
-        >
-          CHECK
-        </Button>
-      )}
     </Box>
   );
 };
