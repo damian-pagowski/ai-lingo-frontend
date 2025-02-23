@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useLessons } from "../context/LessonsContext";
+import { useRanking } from "../context/RankingContext";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -12,12 +14,19 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const LessonResult = ({ result }) => {
   const navigate = useNavigate();
+  const { refreshLessons } = useLessons();
+  const { refreshRanking } = useRanking();
+
+  useEffect(() => {
+    refreshLessons();
+    refreshRanking();
+  }, []);
 
   if (!result) return null;
 
   const formatTopicName = (topic) => {
     return topic
-      .replace(/_/g, " ") 
+      .replace(/_/g, " ")
       .replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
@@ -80,7 +89,12 @@ const LessonResult = ({ result }) => {
         ))}
       </Grid2>
       <Box sx={{ position: "absolute", bottom: 0, width: "100%", p: 2 }}>
-        <Button variant="outlined" fullWidth sx={{ py: 1.5 }} onClick={() => navigate("/lessons")}>
+        <Button
+          variant="outlined"
+          fullWidth
+          sx={{ py: 1.5 }}
+          onClick={() => navigate("/lessons")}
+        >
           OK
         </Button>
       </Box>

@@ -19,7 +19,6 @@ import WordArrangement from "./components/exercises/WordArrangement";
 import MatchingPairs from "./components/exercises/MatchingPairs"
 import MultipleChoice from "./components/exercises/MultipleChoice";
 import FillInTheBlank from "./components/exercises/FillInTheBlank";
-import LessonResult from "./pages/LessonResult";
 const App = () => {
   return (
     <DashboardProvider>
@@ -99,7 +98,6 @@ const App = () => {
                 <Route path="/q2" element={<MatchingPairs />} />
                 <Route path="/q3" element={<MultipleChoice />} />
                 <Route path="/q4" element={<FillInTheBlank />} />
-                <Route path="/result" element={<LessonResult />} />
 
                 
               </Routes>
