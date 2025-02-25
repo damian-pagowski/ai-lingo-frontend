@@ -96,6 +96,7 @@ const LessonDetail = () => {
                   data={currentExercise}
                   selectedAnswer={selectedAnswer}
                   setSelectedAnswer={setSelectedAnswer}
+                  isCorrect={isCorrect}
                 />
               )}
               {currentExercise.type === "fill_in_the_blank" && (
@@ -125,9 +126,9 @@ const LessonDetail = () => {
       </Box>
 
       {/* Show result feedback if answer was checked */}
-      {isChecked && (
+      {/* {isChecked && (
         <Alert severity={isCorrect? "success": "error"}>{isCorrect ? "Correct!" : "Incorrect!"}</Alert>
-      )}
+      )} */}
 
       {/* Bottom Buttons */}
       <Box sx={{ width: "100%", p: 2, bgcolor: "background.default", display: "flex", gap: 1 }}>

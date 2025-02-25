@@ -1,7 +1,35 @@
-import { Box, Typography, List, ListItem, ListItemText, Radio, Paper } from "@mui/material";
+import {
+  Box,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Radio,
+  Paper,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 
-const MultipleChoice = ({ data, selectedAnswer, setSelectedAnswer }) => {
+const MultipleChoice = ({
+  data,
+  selectedAnswer,
+  setSelectedAnswer,
+  isCorrect,
+}) => {
   const options = JSON.parse(data.options);
+  const expected = data.correct_answer;
+
+  useEffect(() => {
+    console.log(JSON.stringify(data));
+    console.log("isCorrect: " + isCorrect);
+    // console.log("isChecked: " + isChecked)
+    // console.log("isRevealed: " + isRevealed)
+  }, [isCorrect]);
+
+  const handleOnClick = (opt) => {
+    //
+    // setIsRevealed(true)
+    setSelectedAnswer(opt);
+  };
 
   return (
     <Box
@@ -21,19 +49,31 @@ const MultipleChoice = ({ data, selectedAnswer, setSelectedAnswer }) => {
           {options.map((option, index) => (
             <ListItem
               key={index}
-              onClick={() => setSelectedAnswer(option)}
+              onClick={() => isCorrect === null  && handleOnClick(option)}
               sx={{
                 display: "flex",
                 alignItems: "center",
                 border: "1px solid",
-                borderColor: selectedAnswer === option ? "primary.main" : "grey.600",
+                borderColor:
+                  selectedAnswer === option
+                    ? isCorrect != null
+                      ? selectedAnswer == expected
+                        ? "success.main"
+                        : "error.main"
+                      : "primary.main"
+                    : option === expected && isCorrect != null
+                    ? "success.main"
+                    : "grey.600",
                 borderRadius: 1,
                 mb: 1,
                 py: 1,
                 px: 2,
               }}
             >
-              <Radio checked={selectedAnswer === option} color="primary" />
+              <Radio
+                checked={selectedAnswer === option}
+                color="primary"
+              />
               <ListItemText primary={option} />
             </ListItem>
           ))}
