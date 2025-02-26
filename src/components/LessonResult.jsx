@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useLessons } from "../context/LessonsContext";
+import { useDashboard } from "../context/DashboardContext";
 import { useRanking } from "../context/RankingContext";
 import { useNavigate } from "react-router-dom";
 import {
@@ -16,10 +17,11 @@ const LessonResult = ({ result }) => {
   const navigate = useNavigate();
   const { refreshLessons } = useLessons();
   const { refreshRanking } = useRanking();
-
+  const { refreshDashboard } = useDashboard();
   useEffect(() => {
     refreshLessons();
     refreshRanking();
+    refreshDashboard();
   }, []);
 
   if (!result) return null;

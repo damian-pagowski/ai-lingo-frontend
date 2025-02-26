@@ -7,7 +7,6 @@ import {
   Radio,
   Paper,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 
 const MultipleChoice = ({
   data,
@@ -17,19 +16,6 @@ const MultipleChoice = ({
 }) => {
   const options = JSON.parse(data.options);
   const expected = data.correct_answer;
-
-  useEffect(() => {
-    console.log(JSON.stringify(data));
-    console.log("isCorrect: " + isCorrect);
-    // console.log("isChecked: " + isChecked)
-    // console.log("isRevealed: " + isRevealed)
-  }, [isCorrect]);
-
-  const handleOnClick = (opt) => {
-    //
-    // setIsRevealed(true)
-    setSelectedAnswer(opt);
-  };
 
   return (
     <Box
@@ -49,7 +35,7 @@ const MultipleChoice = ({
           {options.map((option, index) => (
             <ListItem
               key={index}
-              onClick={() => isCorrect === null  && handleOnClick(option)}
+              onClick={() => isCorrect === null  && setSelectedAnswer(option)}
               sx={{
                 display: "flex",
                 alignItems: "center",
