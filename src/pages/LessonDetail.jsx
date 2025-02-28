@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Box, LinearProgress, Alert } from "@mui/material";
+import { Button, Box, LinearProgress } from "@mui/material";
+import FeedbackSpeedDial from "../components/FeedbackSpeedDial";
 import { getNextLessonExercise, getLessonSummary, submitExerciseAnswer } from "../api/lessonApi";
 import LoadingIndicator from "../components/LoadingIndicator";
 import ErrorMessage from "../components/ErrorMessage";
@@ -125,11 +126,7 @@ const LessonDetail = () => {
         )}
       </Box>
 
-      {/* Show result feedback if answer was checked */}
-      {/* {isChecked && (
-        <Alert severity={isCorrect? "success": "error"}>{isCorrect ? "Correct!" : "Incorrect!"}</Alert>
-      )} */}
-
+     <FeedbackSpeedDial exerciseId={currentExercise.id}/>
       {/* Bottom Buttons */}
       <Box sx={{ width: "100%", p: 2, bgcolor: "background.default", display: "flex", gap: 1 }}>
         {!lessonSummary && (
