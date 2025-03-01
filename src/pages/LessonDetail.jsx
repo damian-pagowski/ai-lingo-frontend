@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button, Box, LinearProgress } from "@mui/material";
 import FeedbackSpeedDial from "../components/FeedbackSpeedDial";
-import { getNextLessonExercise, getLessonSummary, submitExerciseAnswer } from "../api/lessonApi";
+import {
+  getNextLessonExercise,
+  getLessonSummary,
+  submitExerciseAnswer,
+} from "../api/lessonApi";
 import LoadingIndicator from "../components/LoadingIndicator";
 import ErrorMessage from "../components/ErrorMessage";
 import MultipleChoice from "../components/exercises/MultipleChoice";
@@ -21,7 +25,7 @@ const LessonDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [selectedAnswer, setSelectedAnswer] = useState(null); 
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isChecked, setIsChecked] = useState(false);
   const [isCorrect, setIsCorrect] = useState(null);
 
@@ -57,7 +61,9 @@ const LessonDetail = () => {
     if (!selectedAnswer) return;
 
     try {
-      const response = await submitExerciseAnswer(id, currentExercise.id, { answer: selectedAnswer});
+      const response = await submitExerciseAnswer(id, currentExercise.id, {
+        answer: selectedAnswer,
+      });
       setIsCorrect(response.isCorrect);
       setIsChecked(true);
     } catch (error) {
@@ -83,7 +89,15 @@ const LessonDetail = () => {
   if (error) return <ErrorMessage error={error} />;
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", height: "90vh", display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        maxWidth: 600,
+        mx: "auto",
+        display: "flex",
+        flexDirection: "column",
+        height: "90vh",
+      }}
+    >
       <LessonHeader current={currentIndex} total={totalExercises} />
 
       <Box sx={{ flexGrow: 1, overflow: "auto", p: 3 }}>
@@ -105,6 +119,8 @@ const LessonDetail = () => {
                   data={currentExercise}
                   selectedAnswer={selectedAnswer}
                   setSelectedAnswer={setSelectedAnswer}
+                  isCorrect={isCorrect}
+
                 />
               )}
               {currentExercise.type === "word_arrangement" && (
@@ -126,9 +142,17 @@ const LessonDetail = () => {
         )}
       </Box>
 
-     <FeedbackSpeedDial exerciseId={currentExercise.id}/>
+      {!lessonSummary && <FeedbackSpeedDial exerciseId={currentExercise.id} />}
       {/* Bottom Buttons */}
-      <Box sx={{ width: "100%", p: 2, bgcolor: "background.default", display: "flex", gap: 1 }}>
+      <Box
+        sx={{
+          width: "100%",
+          p: 2,
+          bgcolor: "background.default",
+          display: "flex",
+          gap: 1,
+        }}
+      >
         {!lessonSummary && (
           <Button
             variant="contained"
@@ -136,7 +160,11 @@ const LessonDetail = () => {
             onClick={isChecked ? handleContinue : handleCheckAnswer}
             disabled={!selectedAnswer}
           >
-            {isChecked ? (lessonCompleted ? "VIEW SUMMARY" : "CONTINUE") : "CHECK"}
+            {isChecked
+              ? lessonCompleted
+                ? "VIEW SUMMARY"
+                : "CONTINUE"
+              : "CHECK"}
           </Button>
         )}
       </Box>
@@ -146,7 +174,11 @@ const LessonDetail = () => {
 
 const LessonHeader = ({ current, total }) => (
   <Box display="flex" alignItems="center" gap={2} p={2}>
-    <LinearProgress variant="determinate" value={(current / total) * 100} sx={{ flexGrow: 1 }} />
+    <LinearProgress
+      variant="determinate"
+      value={(current / total) * 100}
+      sx={{ flexGrow: 1 }}
+    />
   </Box>
 );
 

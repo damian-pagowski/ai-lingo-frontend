@@ -25,7 +25,7 @@ export default function FeedbackSpeedDial({ exerciseId }) {
   };
 
   return (
-    <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1 }}>
+    <Box sx={{ height: 200, transform: 'translateZ(0px)', flexGrow: 1 }}>
       <SpeedDial
         ariaLabel="Feedback SpeedDial"
         sx={{ position: 'absolute', bottom: 16, right: 16 }}
