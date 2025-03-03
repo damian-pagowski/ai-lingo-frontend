@@ -1,4 +1,6 @@
-import { Box, Typography, TextField, Paper, Avatar } from "@mui/material";
+import { Box, Typography, TextField, Paper } from "@mui/material";
+import ExerciseAudioPlayer from "../ExerciseAudioPlayer"; 
+
 
 const FillInTheBlank = ({
   data,
@@ -10,7 +12,7 @@ const FillInTheBlank = ({
   return (
     <Box sx={{ py: 3, mx: "auto", bgcolor: "background.default" }}>
       <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2, mb: 2 }}>
-        <Avatar src="/character.png" alt="Q" sx={{ width: 60, height: 60 }} />
+        <ExerciseAudioPlayer audioUrl={data.audio_url}/>
         <Paper
           sx={{ p: 2, borderRadius: 2, bgcolor: "grey.800", color: "white" }}
         >
