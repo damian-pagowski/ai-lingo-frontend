@@ -14,6 +14,7 @@ import FillInTheBlank from "../components/exercises/FillInTheBlank";
 import MatchingPairs from "../components/exercises/MatchingPairs";
 import WordArrangement from "../components/exercises/WordArrangement";
 import LessonResult from "../components/LessonResult";
+import SpeakingExercise from "../components/exercises/SpeakingExercise";
 
 const LessonDetail = () => {
   const { id } = useParams();
@@ -120,7 +121,6 @@ const LessonDetail = () => {
                   selectedAnswer={selectedAnswer}
                   setSelectedAnswer={setSelectedAnswer}
                   isCorrect={isCorrect}
-
                 />
               )}
               {currentExercise.type === "word_arrangement" && (
@@ -136,6 +136,10 @@ const LessonDetail = () => {
                   selectedAnswer={selectedAnswer}
                   setSelectedAnswer={setSelectedAnswer}
                 />
+              )}
+
+              {currentExercise.type === "speaking" && (
+                <SpeakingExercise data={currentExercise} />
               )}
             </>
           )

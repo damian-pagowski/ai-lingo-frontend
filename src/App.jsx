@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { DashboardProvider } from "./context/DashboardContext";
 import { LessonsProvider } from "./context/LessonsContext";
-
 import ProtectedRoute from "./components/ProtectedRoute";
 import BottomNavigation from "./components/layout/BottomNavigation";
 import Dashboard from "./pages/Dashboard";
