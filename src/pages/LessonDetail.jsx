@@ -60,7 +60,6 @@ const LessonDetail = () => {
 
   const handleCheckAnswer = async () => {
     if (!selectedAnswer) return;
-
     try {
       const response = await submitExerciseAnswer(id, currentExercise.id, {
         answer: selectedAnswer,
@@ -139,7 +138,12 @@ const LessonDetail = () => {
               )}
 
               {currentExercise.type === "speaking" && (
-                <SpeakingExercise data={currentExercise} />
+                <SpeakingExercise
+                  data={currentExercise}
+                  selectedAnswer={selectedAnswer}
+                  setSelectedAnswer={setSelectedAnswer}
+                  isCorrect={isCorrect}
+                />
               )}
             </>
           )

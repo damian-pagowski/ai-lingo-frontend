@@ -1,4 +1,7 @@
 import { useState, useRef } from "react";
+import { IconButton, Box, Typography, Paper } from "@mui/material";
+import MicIcon from '@mui/icons-material/Mic';
+
 
 const AudioRecorder = ({ onAudioRecorded }) => {
   const [recording, setRecording] = useState(false);
@@ -44,16 +47,29 @@ const AudioRecorder = ({ onAudioRecorded }) => {
   };
 
   return (
-    <div>
-      <button onClick={recording ? stopRecording : startRecording}>
-        {recording ? "Stop Recording" : "Start Recording"}
-      </button>
-      {audioBlob && (
-        <>
-          <button onClick={playAudio}>Play Audio</button>
-        </>
-      )}
-    </div>
+    <Box
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100px",
+    }}
+  >
+    <IconButton
+      onClick={recording ? stopRecording : startRecording}
+      sx={{
+        width: "100px",
+        height: "100px",
+        backgroundColor: recording ? "red" : "primary.main",
+        color: "white",
+        "&:hover": {
+          backgroundColor: recording ? "darkred" : "primary.dark",
+        },
+      }}
+    >
+      <MicIcon sx={{ fontSize: 50 }} />
+    </IconButton>
+  </Box>
   );
 };
 
