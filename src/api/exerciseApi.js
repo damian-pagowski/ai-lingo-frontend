@@ -1,4 +1,5 @@
 import { apiClient } from "./apiClient";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const getExerciseById = async (id) => {
   return await apiClient(`exercise/${id}`, {
@@ -12,8 +13,6 @@ export const voteExercise = async (data) => {
     body: JSON.stringify(data),
   });
 };
-
-const API_URL = 'http://localhost:3000';
 
 export const speaking = async (data, id) => {
   const defaultHeaders = {
