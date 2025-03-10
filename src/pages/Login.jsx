@@ -1,28 +1,34 @@
 import React, { useState } from "react";
-import {
-  Card,
-  Typography,
-  Link,
-  Box,
-} from "@mui/material";
+import { Card, Typography, Link, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api/authApi";
 import LoginForm from "../components/LoginForm";
 import ErrorAlert from "../components/ErrorAlert";
-import {  useDashboard} from "../context/DashboardContext";
+import { useDashboard } from "../context/DashboardContext";
+import { useLessons } from "../context/LessonsContext";
+import { usePreferences } from "../context/PreferencesContext";
+import { useRanking } from "../context/RankingContext";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const {refreshDashboard } = useDashboard();
+  const { refreshDashboard } = useDashboard();
+  const { refreshLessons } = useLessons();
+  const { refreshPreferences } = usePreferences();
+  const { refreshRanking } = useRanking();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const data = await loginUser(email, password);
       localStorage.setItem("token", data.token);
-      setTimeout(refreshDashboard, 100);  
+      setTimeout(refreshDashboard, 100);
+      setTimeout(refreshLessons, 100);
+      setTimeout(refreshPreferences, 100);
+      setTimeout(refreshRanking, 100);
+
       navigate("/dashboard");
     } catch (err) {
       setError(err.message);
@@ -54,7 +60,6 @@ const Login = () => {
   );
 };
 
-
 const SignUpLink = () => (
   <Typography textAlign="center">
     Don&apos;t have an account?{" "}
@@ -63,6 +68,5 @@ const SignUpLink = () => (
     </Link>
   </Typography>
 );
-
 
 export default Login;
