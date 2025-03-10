@@ -13,6 +13,7 @@ export const LessonsProvider = ({ children }) => {
     try {
       const data = await getLessons();
       setLessons(data);
+      setError(null);
     } catch (_err) {
       setError("Failed to load lessons");
     } finally {

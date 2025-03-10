@@ -13,8 +13,11 @@ export const PreferencesProvider = ({ children }) => {
     try {
       const data = await getUserPreferences();
       setPreferences(
-        data?.preferences?.focus_areas ? JSON.parse(data.preferences.focus_areas) : []
+        data?.preferences?.focus_areas
+          ? JSON.parse(data.preferences.focus_areas)
+          : []
       );
+      setError(null);
     } catch (err) {
       console.error("Error fetching preferences:", err);
       setError("Failed to load preferences.");
@@ -28,17 +31,18 @@ export const PreferencesProvider = ({ children }) => {
   }, []);
 
   return (
-    <PreferencesContext.Provider value={{ preferences, loading, error, refreshPreferences }}>
+    <PreferencesContext.Provider
+      value={{ preferences, loading, error, refreshPreferences }}
+    >
       {children}
     </PreferencesContext.Provider>
   );
 };
 
-
 export const usePreferences = () => {
   const context = useContext(PreferencesContext);
   if (!context) {
-    throw new Error('usePreferences must be used within a PreferencesContext');
+    throw new Error("usePreferences must be used within a PreferencesContext");
   }
   return context;
 };

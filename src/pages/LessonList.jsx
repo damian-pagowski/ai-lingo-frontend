@@ -4,9 +4,12 @@ import LessonCard from "../components/LessonCard";
 import CreateLesson from "../components/CreateLesson";
 import { Typography, Stack, Box } from "@mui/material";
 import LoadingIndicator from "../components/LoadingIndicator";
-import ErrorMessage from "../components/ErrorMessage";
-
+// import ErrorMessage from "../components/ErrorMessage";
+import { useNavigate } from "react-router-dom";
+ 
 const LessonList = () => {
+  const navigate = useNavigate();
+
   const { lessons, loading, error } = useLessons();
 
   if (loading) {
@@ -14,7 +17,9 @@ const LessonList = () => {
   }
 
   if (error) {
-    return <ErrorMessage error={error} />;
+    // return <ErrorMessage error={error} />;
+    navigate("/");
+
   }
 
   const notStartedLessons = lessons.filter(lesson => lesson.status === "not_started");

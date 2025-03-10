@@ -5,14 +5,19 @@ import StreakCard from "../components/StreakCard";
 import { useDashboard } from "../context/DashboardContext";
 import LoadingIndicator from "../components/LoadingIndicator";
 import ErrorMessage from "../components/ErrorMessage";
-
+import { useNavigate } from "react-router-dom";
+ 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   const { user, loading, error } = useDashboard();
   if (loading) {
     return <LoadingIndicator />;
   }
   if (error) {
-    return <ErrorMessage error={error} />;
+    navigate("/");
+    // return <ErrorMessage error={error} />;
+
   }
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", width: "100%", p: 2, mb: 4 }}>

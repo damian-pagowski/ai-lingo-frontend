@@ -8,9 +8,12 @@ import { useDashboard } from "../context/DashboardContext";
 import { useLessons } from "../context/LessonsContext";
 import { usePreferences } from "../context/PreferencesContext";
 import { useRanking } from "../context/RankingContext";
+import LoadingIndicator from "../components/LoadingIndicator";
 
 const Login = () => {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -22,18 +25,31 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const data = await loginUser(email, password);
-      localStorage.setItem("token", data.token);
-      setTimeout(refreshDashboard, 100);
-      setTimeout(refreshLessons, 100);
-      setTimeout(refreshPreferences, 100);
-      setTimeout(refreshRanking, 100);
 
-      navigate("/dashboard");
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        await refreshDashboard();
+        await refreshLessons();
+        await refreshPreferences();
+        await refreshRanking();
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 500);
+      } else {
+        throw new Error("Token not received");
+      }
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return <LoadingIndicator />;
+  }
 
   return (
     <Box sx={{ maxWidth: 400, mx: "auto", width: "100%", p: 2 }}>

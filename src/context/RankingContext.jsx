@@ -21,6 +21,8 @@ export const RankingProvider = ({ children }) => {
         ]);
         setUserRank(data.user);
       }
+      setError(null);
+
     } catch (err) {
       console.error("Failed to fetch ranking:", err);
       setError("Failed to load rankings. Please try again.");
