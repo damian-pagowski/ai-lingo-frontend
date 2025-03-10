@@ -9,18 +9,20 @@ import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api/authApi";
 import LoginForm from "../components/LoginForm";
 import ErrorAlert from "../components/ErrorAlert";
-
+import {  useDashboard} from "../context/DashboardContext";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const {refreshDashboard } = useDashboard();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const data = await loginUser(email, password);
       localStorage.setItem("token", data.token);
+      setTimeout(refreshDashboard, 100);  
       navigate("/dashboard");
     } catch (err) {
       setError(err.message);

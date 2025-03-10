@@ -20,7 +20,7 @@ const LessonCard = ({ lesson }) => {
     <Card sx={{ my: 2 }}>
       <CardMedia
         sx={{ height: 140 }}
-        image="public/school.jpg"
+        image="/school.jpg"
         title="green iguana"
       />
       <CardContent>
