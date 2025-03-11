@@ -25,10 +25,10 @@ export const createInitialLesson = async () => {
   });
 };
 
-export const createLesson = async () => {
+export const createLesson = async (types) => {
   return await apiClient(`create-lesson`, {
     method: "POST",
-    body: JSON.stringify({}),
+    body: JSON.stringify({ types }),
   });
 };
 
